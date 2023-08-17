@@ -1,6 +1,6 @@
 General user flow
 
-- Users to log in as customer in order to schedule a session with desired mentor during his/her available timeslot.
+- Users to log in as customer in order to schedule a session with desired mentor 
 - Next, customer can add details of a request before sending it to mentor.
 - Next, customer will see the status of the request in his/her dashboard. 
 - After the request is approved by mentor, customer will see the updated status of the request and the request will be saved to customer and mentor google calendar and provided with a google meet link. 
@@ -9,18 +9,18 @@ General user flow
 Features
 
 - [ ] All users can see the list of mentors and their reviews before joining 
-- [ ] Mentors can update their available timeslots
-- [ ] Customers can send a request to desired mentors
-- [ ] Users can update the schedule 
+- [ ] Customers can send a request to desired mentors 
+- [ ] Customers can cancel a sent request 
+- [ ] Mentors can approve or cancel the request
 - [ ] Bookings can be directly connected/saved to user's google calendar & meet
-- [ ] Mentors and Customers will get access to seperate dashboards
 - [ ] Persistent login 
 - [ ] Responsive design
 
 Advanced features
 
 - [ ] Admin dashboard 
+- [ ] Mentor dasboard 
 - [ ] Auth: to update password & forget password 
 - [ ] Customer: to add card information and conduct payment 
-- [ ] Mentor: to have an application form on the web app 
+- [ ] Mentor: to have an application form on the web app & update their available timeslots 
 - [ ] to be updated 

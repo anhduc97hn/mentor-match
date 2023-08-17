@@ -9,7 +9,7 @@ function MainLayout() {
     <Stack sx={{ minHeight: "100vh" }}>
       <MainHeader />
       <Outlet />
-      <Box sx={{ flexGrow: 1 }} />
+      <Box sx={{ flexGrow: 1, bgcolor: "primary.light" }} />
       <MainFooter />
     </Stack>
   );
