@@ -61,10 +61,10 @@ function MainHeader() {
       onClose={handleMenuClose}
     >
       <Box sx={{ my: 1.5, px: 2.5 }}>
-        <Typography variant="subtitle2" noWrap>
+        <Typography variant="subtitle1" noWrap>
           {user?.username}
         </Typography>
-        <Typography variant="body2" sx={{ color: "text.secondary" }} noWrap>
+        <Typography variant="subtitle1" sx={{ color: "text.secondary" }} noWrap>
           {user?.email}
         </Typography>
       </Box>
@@ -73,33 +73,33 @@ function MainHeader() {
 
       <MenuItem
         onClick={handleMenuClose}
-        to="/mentors"
+        to="/account/profile"
         component={RouterLink}
         sx={{ mx: 1 }}
       >
-        Browse Mentors
+        My Profile
       </MenuItem>
 
       <MenuItem
         onClick={handleMenuClose}
-        to="/account"
+        to="/account/session"
         component={RouterLink}
         sx={{ mx: 1 }}
       >
-        Account Settings
+        My Sessions
       </MenuItem>
 
       <Divider sx={{ borderStyle: "dashed" }} />
 
       <MenuItem onClick={handleLogout} sx={{ m: 1 }}>
-        Logout
+        Log out
       </MenuItem>
     </Menu>
   );
 
   return (
-    <Box sx={{ mb: 0.5 }}>
-      <AppBar position="static" color="transparent">
+    // <Box sx={{ mb: 0.5, zIndex: "tooltip", top: 0, left: 0}}>
+      <AppBar position="sticky" color="inherit" sx={{mb: 0.5, zIndex: "tooltip", top: 0, left: 0}}>
         <Toolbar>
           <IconButton
             size="large"
@@ -146,7 +146,7 @@ function MainHeader() {
           )}
         </Toolbar>
       </AppBar>
-    </Box>
+    // </Box>
   );
 }
 

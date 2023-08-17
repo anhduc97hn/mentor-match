@@ -1,0 +1,24 @@
+.hero__section {
+    height: 800px;
+    background-image: url(/public/assets/images/hero-bg.png);
+    background-size: cover;
+}
+
+.mentor__list {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    background-image: url(/public/assets/images/mentor-list-bg.png);
+    background-size: cover;
+}
+
+.numbers__section {
+    height: 200px; 
+    background-image: url(/public/assets/images/number-bg.png);
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

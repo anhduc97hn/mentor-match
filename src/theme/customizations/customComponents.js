@@ -293,5 +293,10 @@ export function customComponents(theme) {
         variant: "filled",
       },
     },
+    MuiTypography: { 
+      paragraph: { 
+        wordWrap: "break-word"
+      }
+   } 
   };
 }
