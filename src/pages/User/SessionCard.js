@@ -1,6 +1,6 @@
 import { Avatar, Button, Stack, Typography } from "@mui/material";
 import React from "react";
-import RequestContentModal from "../../components/RequestContentModal";
+import RequestContentModal from "./RequestContentModal";
 import { Link as RouterLink } from "react-router-dom";
 
 function SessionCard({ status }) {
@@ -11,6 +11,7 @@ function SessionCard({ status }) {
         <Stack>
           <Typography variant="h6">Topic name</Typography>
           <Typography variant="subtitle2">Mentor/Mentee name</Typography>
+          {status === "Upcoming" &&  <Typography variant="body2" color="success.main">Happening in (x) days</Typography>}
         </Stack>
       </Stack>
       <Stack
@@ -31,7 +32,7 @@ function SessionCard({ status }) {
 
         <Stack spacing={1}>
           <Typography variant="subtitle1">Status</Typography>
-          <Typography variant="body1">{status}</Typography>
+          <Typography variant="body1" color={status === "Canceled" ? "error.main" : "inherit"}>{status}</Typography>
         </Stack>
 
         {status === "Reviewed" ? (
