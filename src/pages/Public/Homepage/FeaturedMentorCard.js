@@ -1,13 +1,20 @@
-import { Avatar, Box, Link, Typography } from '@mui/material'
-import React from 'react'
-import { Link as RouterLink } from 'react-router-dom'
+import { Avatar, Box, Link, Typography } from "@mui/material";
+import React from "react";
+import { Link as RouterLink } from "react-router-dom";
 
-function FeaturedMentorCard({ mentor }) {
+function FeaturedMentorCard({ userProfile }) {
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
       <Avatar
-        src={mentor.avatarUrl}
-        alt={mentor.name}
+        src={userProfile.avatarUrl}
+        alt={userProfile.name}
         sx={{ width: "80px", height: "80px" }}
       />
       <Link
@@ -15,18 +22,18 @@ function FeaturedMentorCard({ mentor }) {
         color="text.primary"
         component={RouterLink}
         sx={{ fontWeight: 600 }}
-        to="/mentors"
+        to={`/mentors/${userProfile._id}`}
       >
-        {mentor.name}
+        {userProfile.name}
       </Link>
       <Typography
         variant="subtitle2"
-        sx={{ display: "block", color: "text.secondary" }}
+        sx={{color: "text.secondary", textAlign: "center" }}
       >
-        {mentor.currentTitle} at {mentor.company}
+        {userProfile.currentPosition} at {userProfile.currentCompany}
       </Typography>
     </Box>
   );
 }
 
-export default FeaturedMentorCard
+export default FeaturedMentorCard;

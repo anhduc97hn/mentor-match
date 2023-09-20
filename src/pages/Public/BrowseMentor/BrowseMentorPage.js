@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import FTextField from "../../../components/form/FTextField";
 import FormProvider from "../../../components/form/FormProvider";
 import FSelect from "../../../components/form/FSelect";
@@ -6,76 +6,136 @@ import LoadingScreen from "../../../components/LoadingScreen";
 import MentorList from "./MentorList";
 import {
   Alert,
-  Autocomplete,
   Box,
   Container,
   InputAdornment,
   Stack,
-  TextField,
   Typography,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { useForm } from "react-hook-form";
 import "./BrowseMentorPage.css";
-
-const renderMenu = [
-  {
-    label: "Skill",
-    options: [{ label: "front end" }, { label: "back end" }],
-  },
-  {
-    label: "Software",
-    options: [{ label: "front end" }, { label: "back end" }],
-  },
-  {
-    label: "Industry",
-    options: [{ label: "front end" }, { label: "back end" }],
-  },
-  {
-    label: "Language",
-    options: [{ label: "Vietnamese" }, { label: "English" }],
-  },
-  {
-    label: "Country",
-    options: [{ label: "Vietnam" }, { label: "United States" }],
-  },
-];
+import { useDispatch, useSelector } from "react-redux";
+import { LoadingButton } from "@mui/lab";
+import { getUserProfile } from "../../../slices/userProfileSlice";
+import { applyFilter } from "../../../utils/mentorFilters";
+import FAutoComplete from "../../../components/form/FAutoComplete";
 
 function BrowseMentorPage() {
+  const [page, setPage] = useState(1);
+  const dispatch = useDispatch();
+  const { currentPageUsers, userProfilesById, isLoading, error } = useSelector(
+    (state) => state.userProfile
+  );
+  const mentors = currentPageUsers.map((userId) => userProfilesById[userId]);
+
   const defaultValues = {
     searchQuery: "",
+    sortBy: "reviewDesc",
+    company: "",
+    position: "",
+    city: "",
   };
   const methods = useForm({
     defaultValues,
   });
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [mentors, setMentors] = useState([]);
+  const { watch } = methods;
+  const filters = watch();
+  console.log("filters", filters)
 
-  const filterMentors = [
-    "Duc",
-    "Thong",
-    "Duc",
-    "Thong",
-    "Duc",
-    "Thong",
-    "Duc",
-    "Thong",
-    "Duc",
-    "Thong",
-    "Duc",
-    "Thong",
+  const filteredMentors = applyFilter(mentors, filters);
+  // const [filterOptions, setFilterOptions] = useState({
+  //   company: [],
+  //   position: [],
+  //   city: [],
+  // });
+
+  // Fetch all mentors
+  useEffect(() => {
+    dispatch(getUserProfile({ page }));
+  }, [dispatch, page]);
+
+  // Extract filter options from the existing mentor data
+  // useEffect(() => {
+  //   if (mentors.length > 0) {
+  //     const extractFilterOptions = () => {
+  //       const uniqueCompanies = new Set();
+  //       const uniquePositions = new Set();
+  //       const uniqueCities = new Set();
+    
+  //       mentors.forEach((mentor) => {
+  //         uniqueCompanies.add(mentor.currentCompany);
+  //         uniquePositions.add(mentor.currentPosition);
+  //         uniqueCities.add(mentor.city);
+  //       });
+    
+  //       setFilterOptions({
+  //         company: Array.from(uniqueCompanies),
+  //         position: Array.from(uniquePositions),
+  //         city: Array.from(uniqueCities),
+  //       });
+  //     };
+  //     extractFilterOptions();
+  //   }
+  // }, [mentors]);
+
+    // Calculate filter options inline
+    const filterOptions = useMemo(() => {
+      const uniqueCompanies = new Set();
+      const uniquePositions = new Set();
+      const uniqueCities = new Set();
+  
+      mentors.forEach((mentor) => {
+        uniqueCompanies.add(mentor.currentCompany);
+        uniquePositions.add(mentor.currentPosition);
+        uniqueCities.add(mentor.city);
+      });
+  
+      return {
+        company: Array.from(uniqueCompanies),
+        position: Array.from(uniquePositions),
+        city: Array.from(uniqueCities),
+      };
+    }, [mentors]);
+
+
+  const renderMenu = [
+    {
+      label: "Company",
+      name: "company",
+      options: filterOptions.company,
+    },
+    {
+      label: "Position",
+      name: "position",
+      options: filterOptions.position,
+    },
+    {
+      label: "City",
+      name: "city",
+      options: filterOptions.city,
+    },
   ];
 
   return (
     <section className="mentorlist-page">
       <Container
-        sx={{ backgroundColor: "primary.light", padding: 2, m: 0 }}
+        sx={{
+          backgroundColor: "primary.light",
+          padding: 2,
+          m: 0,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+        }}
         maxWidth="false"
       >
         <FormProvider methods={methods}>
-          <Box className="search-bar" sx={{ height: "200px" }}>
+          <Box
+            className="search-bar"
+            sx={{ height: "200px", borderRadius: 1.5 }}
+          >
             <FTextField
               name="searchQuery"
               size="medium"
@@ -90,7 +150,7 @@ function BrowseMentorPage() {
                     />
                   </InputAdornment>
                 ),
-                placeholder: "Search by name or keywords",
+                placeholder: "Search by mentor name",
               }}
             />
 
@@ -98,21 +158,23 @@ function BrowseMentorPage() {
               sx={{
                 alignItems: "center",
                 justifyContent: "center",
-                gap: 0.5,
                 p: 1,
                 mt: 2,
               }}
-              flexDirection="row"
+              direction="row"
+              spacing={2}
             >
               {renderMenu.map((item) => (
-                <Autocomplete
-                  disablePortal
-                  id="combo-box-demo"
+                <FAutoComplete
+                  key={item.name}
+                  name={item.name}
+                  label={item.label}
                   options={item.options}
-                  sx={{ width: 300 }}
-                  renderInput={(params) => (
-                    <TextField {...params} label={item.label} />
-                  )}
+                  sx={{
+                    width: 300,
+                    border: "1px solid #9DA4AE",
+                    borderRadius: 1,
+                  }}
                 />
               ))}
             </Stack>
@@ -131,12 +193,12 @@ function BrowseMentorPage() {
               name="sortBy"
               label="Sort By"
               size="medium"
-              sx={{ width: 150 }}
+              sx={{ width: "auto" }}
             >
               {[
-                { value: "Reviews", label: "Reviews" },
-                { value: "Newest", label: "Newest" },
-                { value: "Oldest", label: "Oldest" },
+                { value: "reviewDesc", label: "Most Rating" },
+                { value: "sessionDesc", label: "Most Sessions" },
+                { value: "newest", label: "Most Recent" },
               ].map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
@@ -145,19 +207,30 @@ function BrowseMentorPage() {
             </FSelect>
           </Stack>
           <Box sx={{ position: "relative", height: 1 }}>
-            {loading ? (
+            {isLoading ? (
               <LoadingScreen />
             ) : (
               <>
                 {error ? (
                   <Alert severity="error">{error}</Alert>
                 ) : (
-                  <MentorList mentors={filterMentors} />
+                  <MentorList mentors={filteredMentors} />
                 )}
               </>
             )}
           </Box>
         </FormProvider>
+        <Box sx={{ mt: 2, textAlign: "center" }}>
+          <LoadingButton
+            sx={{ width: "200px" }}
+            variant="outlined"
+            size="small"
+            loading={isLoading}
+            onClick={() => setPage((page) => page + 1)}
+          >
+            Load more
+          </LoadingButton>
+        </Box>
       </Container>
     </section>
   );

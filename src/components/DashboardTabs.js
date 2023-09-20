@@ -4,8 +4,8 @@ import { capitalCase } from "change-case";
 import { Link as RouterLink } from "react-router-dom";
 import "./DashboardTabs.css";
 
-function DashboardTabs({ props, title }) {
-  const [currentTab, setCurrentTab] = useState("requests");
+function DashboardTabs({ tabs, title, currentUserProfileId, defaultTab }) {
+  const [currentTab, setCurrentTab] = useState(defaultTab);
 
   return (
     <Container className="dashboard-tabs" maxWidth="false" disableGutters>
@@ -20,7 +20,7 @@ function DashboardTabs({ props, title }) {
           allowScrollButtonsMobile
           onChange={(e, value) => setCurrentTab(value)}
         >
-          {props.map((tab) => (
+          {tabs.map((tab) => (
             <Tab
               disableRipple
               key={tab.value}
@@ -43,12 +43,14 @@ function DashboardTabs({ props, title }) {
           pb: 5,
         }}
       >
-        {props.map((tab) => {
+        {tabs.map((tab) => {
           const isMatched = tab.value === currentTab;
           return (
             isMatched && (
               <Card key={tab.value} sx={{ ml: "15%", mr: "15%", p: 2 }}>
-                {tab.component}
+                {typeof tab.component === "function"
+                  ? tab.component({ currentUserProfileId })
+                  : tab.component}
               </Card>
             )
           );

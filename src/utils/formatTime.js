@@ -4,6 +4,10 @@ export function fDate(date) {
     return format(new Date(date), "dd MMMM yyyy"); 
 }
 
+export function fDateToMonthYear(date) {
+    return format(new Date(date), "MMMM yyyy");
+  }
+
 export function fDateTime(date) {
     return format(new Date(date), "dd MMMM yyyy HH:mm"); 
 }

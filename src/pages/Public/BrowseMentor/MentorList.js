@@ -5,7 +5,7 @@ function MentorList({mentors}) {
 
   return (
    <>
-    {mentors.map((mentor, index) => (<MentorCard mentor={mentor} key={index}/>))}
+    {mentors.map((mentor) => (<MentorCard mentor={mentor} key={mentor._id}/>))}
    </> 
   )
   }

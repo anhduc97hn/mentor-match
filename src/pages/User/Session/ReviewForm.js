@@ -5,15 +5,17 @@ import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import FormProvider from "../../components/form/FormProvider";
-import FTextField from "../../components/form/FTextField"
+import FormProvider from "../../../components/form/FormProvider";
+import FTextField from "../../../components/form/FTextField"
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import * as Yup from "yup";
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-import FRating from '../../components/form/FRating';
+import FRating from '../../../components/form/FRating';
+import { useDispatch } from 'react-redux';
+import { createReview } from '../../../slices/reviewSlice';
 
 const style = {
   position: 'absolute',
@@ -22,9 +24,10 @@ const style = {
   transform: 'translate(-50%, -50%)',
   width: 600,
   bgcolor: 'background.paper',
-  border: '2px solid #000',
+  border: '1px solid #9DA4AE',
   boxShadow: 24,
   p: 4,
+  borderRadius: 2
 };
 
 const ReviewSchema = Yup.object().shape({
@@ -41,7 +44,10 @@ export default function ReviewForm({children}) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const params = useParams();
+  const { sessionId } = params; 
 
   const methods = useForm({
     resolver: yupResolver(ReviewSchema),
@@ -56,9 +62,8 @@ export default function ReviewForm({children}) {
 
   const onSubmit = async (data) => {
     console.log("data", data)
-    alert(data)
-    reset()
-    navigate("/account/session")
+    dispatch(createReview({data, sessionId})).then(() => reset())
+    navigate("/account/sessions")
   };
 
   return (

@@ -22,16 +22,22 @@ import SessionPage from "../pages/Private/SessionPage";
 import LoginPage from "../pages/Auth/LoginPage";
 import RegisterPage from "../pages/Auth/RegisterPage";
 
-// *** import Customer pages ***
+// *** import Dashboard pages ***
 
 import UserProfile from "../pages/User/UserProfile";
 import UserSession from "../pages/User/UserSession";
 
-// *** import Dashboard redirect config ***
+// *** import Auth config ***
 
 import AuthRequire from "./AuthRequire";
+import useAuth from "../hooks/useAuth";
 
 function Router() {
+
+  const auth = useAuth();
+  const isMentor = auth?.userProfile?.isMentor || null;
+  const userProfile = auth?.userProfle || null; 
+
   return (
     <Routes>
       {/* common routes */}
@@ -47,19 +53,19 @@ function Router() {
             </AuthRequire>
           }
         />
-        <Route
+        {/* <Route
           path="/account"
           element={
             <AuthRequire>
               <UserProfile />
             </AuthRequire>
           }
-        />
+        /> */}
         <Route
           path="/account/profile"
           element={
             <AuthRequire>
-              <UserProfile />
+              <UserProfile isMentor={isMentor} />
             </AuthRequire>
           }
         />
@@ -67,7 +73,7 @@ function Router() {
           path="/account/session"
           element={
             <AuthRequire>
-              <UserSession />
+              <UserSession userProfile={userProfile} />
             </AuthRequire>
           }
         />
