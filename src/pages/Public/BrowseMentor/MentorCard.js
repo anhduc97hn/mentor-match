@@ -3,7 +3,6 @@ import {
   Box,
   Button,
   Card,
-  Link,
   Stack,
   Tab,
   Tabs,
@@ -13,28 +12,38 @@ import React, { useState } from "react";
 import StarIcon from '@mui/icons-material/Star';
 import { Link as RouterLink } from "react-router-dom"
 import MentorChip from "./MentorChip";
+import { fData } from "../../../utils/numberFormat";
 
 function MentorCard({ mentor }) {
-  const [currentTab, setCurrentTab] = useState("Expertise");
 
-  const expertise = ["expertise a", "expertise b", "expertise c"]
-  const industry = ["industry a", "industry b", "industry c"]
-  const tools = ["tool a", "tool b", "tool c"]
+  const [currentTab, setCurrentTab] = useState("Certifications");
+  const mentorId = mentor._id; 
+
+  const certifications = mentor.certifications || null;
+  const certificationNames = certifications?.map((certi) => certi.name);
+  
+  const experiences = mentor.experiences || null; 
+  const industryNames = experiences?.map((exp) => exp.industry);
+
+  const education = mentor.education || null;
+  const educationFields = education?.map((edu) => edu.field);
 
   const INFO_TABS = [
     {
-      value: "Expertise",
-      component: <MentorChip labels={expertise} />,
+      value: "Certifications",
+      component: <MentorChip labels={certificationNames} />,
     },
     {
       value: "Industry",
-      component: <MentorChip labels={industry} />,
+      component: <MentorChip labels={industryNames} />,
     },
     {
-      value: "Tools",
-      component: <MentorChip labels={tools} />,
+      value: "Education",
+      component: <MentorChip labels={educationFields} />,
     },
   ];
+
+  const fRating = mentor.reviewAverageRating ? fData(mentor.reviewAverageRating) : "";
 
   return (
     <Card sx={{ mt: 2, padding: 2 }}>
@@ -45,43 +54,40 @@ function MentorCard({ mentor }) {
           sx={{ width: 50, height: 50 }}
         />
         <Box flexGrow={1}>
-          <Link
+          <Typography
             variant="subtitle2"
-            color="text.primary"
-            sx={{ fontWeight: 600 }}
-            to={`/mentors`}
+            color="primary"
+            component={ RouterLink }
+            sx={{ fontWeight: 600, textDecoration: "none" }}
+            to={`/mentors/${mentorId}`}
           >
-            Mentor name
-          </Link>
+            {mentor.name}
+          </Typography>
 
           <Typography
             variant="caption"
             sx={{ display: "block", color: "text.secondary" }}
           >
-            Current title at current company
+            {mentor.currentPosition} at {mentor.currentCompany}
           </Typography>
         </Box>
         <Stack>
           <Stack direction="row" justifyContent="flex-end">
             <StarIcon sx={{ color: "primary.main", mr: 0.5 }} />
-            <Typography variant="h5">4.99</Typography>
+            <Typography variant="h5">{fRating}</Typography>
           </Stack>
           <Typography variant="subtitle2">
-            299 reviews / 537 sessions
+            {mentor.reviewCount} reviews /  {mentor.sessionCount} sessions
           </Typography>
         </Stack>
       </Stack>
 
       <Typography variant="subtitle2" sx={{ mt: 1, mb: 1 }}>
-        As VP of Growth at EuroVPS, I had to make a LOT of decisions, daily.
-        This got exhausting, especially if I had multiple good ideas on how to
-        do something, but wasn't sure which to choose. Moments like these
-        inspired me to build GrowthMentor. Does this resonate? If so, I'd love
-        to try and help you.
+       {mentor.aboutMe}
       </Typography>
 
-      <Stack direction="row">
-        <Box sx={{ flexGrow: 1 }}>
+      <Stack direction="row" justifyContent="space-between" alignItems="center">
+        <Box>
           <Tabs
             value={currentTab}
             scrollButtons="auto"
@@ -111,9 +117,9 @@ function MentorCard({ mentor }) {
             );
           })}
         </Box>
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-          <Button variant="contained" component={RouterLink} to="/mentors/:mentordId/session">Request a Call</Button>
-          <Button variant="outlined" component={RouterLink} to="/mentors/:mentorId">View Profile</Button>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 1, flexShrink: "0" }}>
+          <Button variant="contained" component={RouterLink} to={`/mentors/${mentorId}/session`}>Request a Call</Button>
+          <Button variant="outlined" component={RouterLink} to={`/mentors/${mentorId}`}>View Profile</Button>
         </Box>
       </Stack>
     </Card>

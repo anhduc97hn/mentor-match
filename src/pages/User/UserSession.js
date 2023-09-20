@@ -1,38 +1,44 @@
 import React from "react";
 import DashboardTabs from "../../components/DashboardTabs";
-import SessionArchived from "./SessionArchived";
-import SessionCanceled from "./SessionCanceled";
-import SessionRequests from "./SessionRequests";
-import SessionReviewed from "./SessionReviewed";
-import SessionUpcoming from "./SessionUpcoming";
+import SessionArchived from "./Session/SessionArchived";
+import SessionCanceled from "./Session/SessionCanceled";
+import SessionRequests from "./Session/SessionRequests";
+import SessionReviewed from "./Session/SessionReviewed";
+import SessionUpcoming from "./Session/SessionUpcoming";
 
-function UserSession() {
-  const title = "My Session";
+const title = "My Session";
+const ACCOUNT_TABS = [
+  {
+    value: "requests",
+    component: (props) => <SessionRequests {...props} />,
+  },
+  {
+    value: "upcoming",
+    component: (props) => <SessionUpcoming {...props} />,
+  },
+  {
+    value: "attention",
+    component: (props) => <SessionArchived {...props} />,
+  },
+  {
+    value: "reviewed",
+    component: (props) => <SessionReviewed {...props} />,
+  },
+  {
+    value: "cancelled",
+    component: (props) => <SessionCanceled {...props} />,
+  },
+];
 
-  const ACCOUNT_TABS = [
-    {
-      value: "requests",
-      component: <SessionRequests />,
-    },
-    {
-      value: "upcoming",
-      component: <SessionUpcoming />,
-    },
-    {
-      value: "attention",
-      component: <SessionArchived />,
-    },
-    {
-      value: "reviewed",
-      component: <SessionReviewed />,
-    },
-    {
-      value: "canceled",
-      component: <SessionCanceled />,
-    },
-  ];
-
-  return <DashboardTabs props={ACCOUNT_TABS} title={title} />;
+function UserSession({ userProfile }) {
+  return (
+    <DashboardTabs
+      tabs={ACCOUNT_TABS}
+      title={title}
+      userProfile={userProfile}
+      defaultTab="requests"
+    />
+  );
 }
 
 export default UserSession;

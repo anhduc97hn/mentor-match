@@ -22,12 +22,10 @@ const defaultValues = {
 };
 
 function LoginPage() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const auth = useAuth();
   const [showPassword, setShowPassword] = useState(false);
-
-  let navigate = useNavigate();
-  let location = useLocation();
-  let auth = useAuth();
-
 
   const methods = useForm({
     resolver: yupResolver(LoginSchema),
@@ -36,17 +34,23 @@ function LoginPage() {
 
   const {
     handleSubmit,
+    reset,
+    setError,
     formState: { errors, isSubmitting },
   } = methods;
 
   const onSubmit = async (data) => {
+    const from = location.state?.from?.pathname || "/";
+    let { email, password } = data;
 
-    let from = location.state?.from?.pathname || "/";
-    let username = data.email;
-
-    auth.login(username, () => {
-      navigate(from, { replace: true });
-    });
+    try {
+      await auth.login({ email, password }, () => {
+        navigate(from, { replace: true });
+      });
+    } catch (error) {
+      reset();
+      setError("responseError", error);
+    }
   };
 
   return (

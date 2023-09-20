@@ -3,9 +3,9 @@ import React from 'react'
 
 function MentorChip({labels}) {
   return (
-    <Stack direction="row" spacing={1} sx={{alignItems: "center"}}>
-    {labels?.map((tool) => (
-      <Chip label={tool} variant="outlined" />
+    <Stack direction="row" alignItems="center" flexWrap="wrap">
+    {labels?.map((label, index) => (
+      <Chip label={label} variant="outlined" size="small" sx={{m: 0.5}} key={index+1}/>
     ))}
   </Stack>
   )
