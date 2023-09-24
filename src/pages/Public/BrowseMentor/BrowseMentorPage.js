@@ -9,6 +9,7 @@ import {
   Box,
   Container,
   InputAdornment,
+  Pagination,
   Stack,
   Typography,
 } from "@mui/material";
@@ -18,15 +19,23 @@ import "./BrowseMentorPage.css";
 import { useDispatch, useSelector } from "react-redux";
 import { LoadingButton } from "@mui/lab";
 import { getUserProfile } from "../../../slices/userProfileSlice";
-import { applyFilter } from "../../../utils/mentorFilters";
 import FAutoComplete from "../../../components/form/FAutoComplete";
 
 function BrowseMentorPage() {
+
   const [page, setPage] = useState(1);
+  const handleChange = (event, value) => {
+    setPage(value);
+  };
   const dispatch = useDispatch();
-  const { currentPageUsers, userProfilesById, isLoading, error } = useSelector(
-    (state) => state.userProfile
-  );
+  const {
+    currentPageUsers,
+    userProfilesById,
+    isLoading,
+    error,
+    total,
+    totalPages,
+  } = useSelector((state) => state.userProfile);
   const mentors = currentPageUsers.map((userId) => userProfilesById[userId]);
 
   const defaultValues = {
@@ -40,65 +49,41 @@ function BrowseMentorPage() {
     defaultValues,
   });
 
-  const { watch } = methods;
-  const filters = watch();
-  console.log("filters", filters)
+  const { reset, handleSubmit } = methods;
 
-  const filteredMentors = applyFilter(mentors, filters);
-  // const [filterOptions, setFilterOptions] = useState({
-  //   company: [],
-  //   position: [],
-  //   city: [],
-  // });
+  const [updates, setUpdates] = useState(defaultValues);
 
-  // Fetch all mentors
+  const onSubmit = (data) => {
+    setUpdates(data);
+  };
+
+  const handleReset = () => {
+    setUpdates(defaultValues);
+    reset();
+  };
+
   useEffect(() => {
-    dispatch(getUserProfile({ page }));
-  }, [dispatch, page]);
+    dispatch(getUserProfile({ filter: updates, page }));
+  }, [dispatch, updates, page]);
 
-  // Extract filter options from the existing mentor data
-  // useEffect(() => {
-  //   if (mentors.length > 0) {
-  //     const extractFilterOptions = () => {
-  //       const uniqueCompanies = new Set();
-  //       const uniquePositions = new Set();
-  //       const uniqueCities = new Set();
-    
-  //       mentors.forEach((mentor) => {
-  //         uniqueCompanies.add(mentor.currentCompany);
-  //         uniquePositions.add(mentor.currentPosition);
-  //         uniqueCities.add(mentor.city);
-  //       });
-    
-  //       setFilterOptions({
-  //         company: Array.from(uniqueCompanies),
-  //         position: Array.from(uniquePositions),
-  //         city: Array.from(uniqueCities),
-  //       });
-  //     };
-  //     extractFilterOptions();
-  //   }
-  // }, [mentors]);
+  // Calculate filter options inline
+  const filterOptions = useMemo(() => {
+    const uniqueCompanies = new Set();
+    const uniquePositions = new Set();
+    const uniqueCities = new Set();
 
-    // Calculate filter options inline
-    const filterOptions = useMemo(() => {
-      const uniqueCompanies = new Set();
-      const uniquePositions = new Set();
-      const uniqueCities = new Set();
-  
-      mentors.forEach((mentor) => {
-        uniqueCompanies.add(mentor.currentCompany);
-        uniquePositions.add(mentor.currentPosition);
-        uniqueCities.add(mentor.city);
-      });
-  
-      return {
-        company: Array.from(uniqueCompanies),
-        position: Array.from(uniquePositions),
-        city: Array.from(uniqueCities),
-      };
-    }, [mentors]);
+    mentors.forEach((mentor) => {
+      uniqueCompanies.add(mentor.currentCompany);
+      uniquePositions.add(mentor.currentPosition);
+      uniqueCities.add(mentor.city);
+    });
 
+    return {
+      company: Array.from(uniqueCompanies),
+      position: Array.from(uniquePositions),
+      city: Array.from(uniqueCities),
+    };
+  }, [mentors]);
 
   const renderMenu = [
     {
@@ -131,7 +116,7 @@ function BrowseMentorPage() {
         }}
         maxWidth="false"
       >
-        <FormProvider methods={methods}>
+        <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
           <Box
             className="search-bar"
             sx={{ height: "200px", borderRadius: 1.5 }}
@@ -157,7 +142,7 @@ function BrowseMentorPage() {
             <Stack
               sx={{
                 alignItems: "center",
-                justifyContent: "center",
+                justifyContent: "space-around",
                 p: 1,
                 mt: 2,
               }}
@@ -177,6 +162,22 @@ function BrowseMentorPage() {
                   }}
                 />
               ))}
+              <FSelect
+                name="sortBy"
+                label="Sort By"
+                size="medium"
+                sx={{ width: "auto"}}
+              >
+                {[ 
+                  { value: "reviewDesc", label: "Most Rating" },
+                  { value: "sessionDesc", label: "Most Sessions" },
+                  { value: "newest", label: "Most Recent" },
+                ].map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </FSelect>
             </Stack>
           </Box>
           <Stack
@@ -188,48 +189,55 @@ function BrowseMentorPage() {
               mb: 2,
             }}
           >
-            <Typography variant="subtitle1">100 mentors found</Typography>
-            <FSelect
-              name="sortBy"
-              label="Sort By"
-              size="medium"
-              sx={{ width: "auto" }}
+            <Typography variant="subtitle1">{`${total} mentors found`}</Typography>
+            <Stack
+              flexDirection="row"
+              sx={{
+                alignItems: "center",
+                justifyContent: "center",
+              }}
             >
-              {[
-                { value: "reviewDesc", label: "Most Rating" },
-                { value: "sessionDesc", label: "Most Sessions" },
-                { value: "newest", label: "Most Recent" },
-              ].map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </FSelect>
+              <LoadingButton
+                sx={{ mr: 1 }}
+                variant="contained"
+                size="small"
+                loading={isLoading}
+                type="submit"
+              >
+                Search
+              </LoadingButton>
+              <LoadingButton
+                variant="outlined"
+                size="small"
+                onClick={handleReset}
+              >
+                Reset
+              </LoadingButton>
+            </Stack>
           </Stack>
-          <Box sx={{ position: "relative", height: 1 }}>
-            {isLoading ? (
-              <LoadingScreen />
-            ) : (
-              <>
-                {error ? (
-                  <Alert severity="error">{error}</Alert>
-                ) : (
-                  <MentorList mentors={filteredMentors} />
-                )}
-              </>
-            )}
-          </Box>
         </FormProvider>
-        <Box sx={{ mt: 2, textAlign: "center" }}>
-          <LoadingButton
-            sx={{ width: "200px" }}
-            variant="outlined"
-            size="small"
-            loading={isLoading}
-            onClick={() => setPage((page) => page + 1)}
-          >
-            Load more
-          </LoadingButton>
+        <Box sx={{ position: "relative", height: 1 }}>
+          {isLoading ? (
+            <LoadingScreen sx={{ top: 0, left: 0 }} />
+          ) : (
+            <>
+              {error ? (
+                <Alert severity="error">{error}</Alert>
+              ) : (
+                <MentorList mentors={mentors} />
+              )}
+            </>
+          )}
+        </Box>
+        <Box
+          sx={{
+            mt: 2,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Pagination count={totalPages} page={page} onChange={handleChange} />
         </Box>
       </Container>
     </section>

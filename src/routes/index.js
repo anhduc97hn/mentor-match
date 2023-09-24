@@ -36,7 +36,7 @@ function Router() {
 
   const auth = useAuth();
   const isMentor = auth?.userProfile?.isMentor || null;
-  const userProfile = auth?.userProfle || null; 
+  const userProfile = auth?.userProfile || null; 
 
   return (
     <Routes>
@@ -53,14 +53,6 @@ function Router() {
             </AuthRequire>
           }
         />
-        {/* <Route
-          path="/account"
-          element={
-            <AuthRequire>
-              <UserProfile />
-            </AuthRequire>
-          }
-        /> */}
         <Route
           path="/account/profile"
           element={
@@ -73,7 +65,7 @@ function Router() {
           path="/account/session"
           element={
             <AuthRequire>
-              <UserSession userProfile={userProfile} />
+              <UserSession userProfile={userProfile} isMentor={isMentor} />
             </AuthRequire>
           }
         />

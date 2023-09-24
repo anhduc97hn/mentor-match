@@ -19,3 +19,7 @@ export function fShortenNumber(number) {
 export function fData(number) {
   return numeral(number).format("0.0");
 }
+
+export function fSize(number) {
+  return numeral(number).format("0.0 b");
+}

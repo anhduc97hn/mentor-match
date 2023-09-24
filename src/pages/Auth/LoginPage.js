@@ -49,7 +49,7 @@ function LoginPage() {
       });
     } catch (error) {
       reset();
-      setError("responseError", error);
+      setError("responseError", error.errors ? error.errors : error);
     }
   };
 

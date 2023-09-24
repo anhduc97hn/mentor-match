@@ -30,13 +30,13 @@ function UserProfile({ isMentor }) {
     <DashboardTabs
       tabs={ACCOUNT_TABS}
       title={title}
-      defaultTab="general"
+      defaultTab="General"
     />
   ) : (
     <DashboardTabs
       tabs={[ACCOUNT_TABS[0]]}
       title={title}
-      defaultTab="general"
+      defaultTab="General"
     />
   );
 }

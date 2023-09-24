@@ -1,25 +1,20 @@
 import React, { useState } from "react";
 import {
-  Link,
   Card,
-  Avatar,
   Typography,
-  CardHeader,
   IconButton,
-  List,
-  ListItemButton,
-  ListItemText,
   Menu,
   MenuItem,
+  CardContent,
+  Grid,
 } from "@mui/material";
-import { Link as RouterLink } from "react-router-dom";
+
 import { fDate } from "../../../utils/formatTime";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useDispatch } from "react-redux";
-import { remove } from "../../../slices/certificationSlice";
+import { certificationRemove } from "../../../slices/resourceSlice";
 
 function CertiCard({ certi, setCurrentCerti, certiFormRef }) {
- 
   const [anchorEl, setAnchorEl] = useState(null);
   const dispatch = useDispatch();
 
@@ -50,7 +45,7 @@ function CertiCard({ certi, setCurrentCerti, certiFormRef }) {
     );
 
     if (res) {
-      dispatch(remove(certiId));
+      dispatch(certificationRemove(certiId));
     }
     return;
   };
@@ -82,58 +77,36 @@ function CertiCard({ certi, setCurrentCerti, certiFormRef }) {
 
   return (
     <Card>
-      <CardHeader
-        disableTypography
-        avatar={
-          <Avatar
-            src={certi?.userProfile?.avatarUrl}
-            alt={certi?.userProfile?.name}
-          />
-        }
-        title={
-          <Link
-            variant="subtitle2"
-            color="text.primary"
-            component={RouterLink}
-            sx={{ fontWeight: 600 }}
-            to="/account/profile"
-          >
-            {certi?.userProfile?.name}
-          </Link>
-        }
-        subheader={
-          <Typography
-            variant="caption"
-            sx={{ display: "block", color: "text.secondary" }}
-          >
-            {fDate(certi.createdAt)}
-          </Typography>
-        }
-        action={
-          <IconButton>
-            <MoreVertIcon sx={{ fontSize: 30 }} onClick={handleCardOpen} />
-          </IconButton>
-        }
-      />
+      <CardContent>
+        <Grid container justifyContent="space-between" alignItems="center">
+          <Grid item>
+            <Typography
+              variant="subtitle1"
+              component="div"
+              color="text.primary"
+            >
+              {certi.name}
+            </Typography>
+          </Grid>
+          <Grid item>
+            <IconButton onClick={handleCardOpen}>
+              <MoreVertIcon />
+            </IconButton>
+          </Grid>
+        </Grid>
+        <Typography variant="subtitle2" color="text.secondary">
+          {`Description: ${certi.description}`}
+        </Typography>
+        <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+          {`Website: ${certi.url}`}
+        </Typography>
+        <Typography variant="caption" color="text.secondary">
+          {certi.updatedAt !== certi.createdAt
+            ? `Edited on ${fDate(certi.updatedAt)}`
+            : `Created on ${fDate(certi.createdAt)}`}
+        </Typography>
+      </CardContent>
       {renderMenu}
-      <List
-        sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
-        component="nav"
-        aria-labelledby="nested-list-subheader"
-      >
-        <ListItemButton>
-          <Typography variant="subtitle1">Name:</Typography>
-          <ListItemText primary={certi.name} />
-        </ListItemButton>
-        <ListItemButton>
-          <Typography variant="subtitle1">Description:</Typography>
-          <ListItemText primary={certi.description} />
-        </ListItemButton>
-        <ListItemButton>
-          <Typography variant="subtitle1">Url:</Typography>
-          <ListItemText primary={certi.url} />
-        </ListItemButton>
-      </List>
     </Card>
   );
 }

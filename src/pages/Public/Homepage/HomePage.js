@@ -6,8 +6,17 @@ import FeaturedMentorList from "./FeaturedMentorList";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserProfileFeatured } from "../../../slices/userProfileSlice";
 import LoadingScreen from "../../../components/LoadingScreen";
+import { useMediaQuery } from "@mui/material";
+
+
 
 function HomePage() {
+
+  const breakpoints = {
+    desktop: useMediaQuery((theme) => theme.breakpoints.up("lg")),
+    tablet: useMediaQuery((theme) => theme.breakpoints.between("md", "lg")),
+    smartphone: useMediaQuery((theme) => theme.breakpoints.down("md")),
+  };
   
   const { currentPageUsers, userProfilesById, isLoading } = useSelector(
     (state) => state.userProfile
@@ -48,6 +57,7 @@ function HomePage() {
                     variant="outlined"
                     component="a"
                     href="https://www.youtube.com/watch?v=x9kQ8m2ex4k&t=35s"
+                    target="_blank"
                   >
                     What people are saying
                   </Button>
@@ -215,7 +225,7 @@ function HomePage() {
                   Get the kind of personalised advice you'd never find by
                   passively binging content.
                 </Typography>
-                {isLoading ? (<LoadingScreen />) : ( <FeaturedMentorList userProfiles={userProfiles} />)}
+                {isLoading ? (<LoadingScreen sx={{top: 0, left: 0}}/>) : ( <FeaturedMentorList userProfiles={userProfiles} />)}
                
               </Container>
             </div>

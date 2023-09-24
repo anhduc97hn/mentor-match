@@ -54,15 +54,14 @@ function RegisterPage() {
   } = methods;
 
   const onSubmit = async (data) => {
-    window.alert(JSON.stringify(data));
-    const { name, email, password } = data;
+    const { name, email, password, isMentor } = data;
     try {
-      await auth.register({ name, email, password }, () => {
+      await auth.register({ name, email, password, isMentor }, () => {
         navigate("/", { replace: true });
       });
     } catch (error) {
       reset();
-      setError("responseError", error);
+      setError("responseError", error.errors ? error.errors : error);
     }
   };
 

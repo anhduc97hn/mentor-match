@@ -1,9 +1,10 @@
-import { Avatar, Card, Stack, Typography } from "@mui/material";
+import { Avatar, Box, Card, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getReviewsPerMentor } from "../../../slices/reviewSlice";
 import { fDateToMonthYear } from "../../../utils/formatTime";
 import { LoadingButton } from "@mui/lab";
+import LoadingScreen from "../../../components/LoadingScreen";
 
 function MentorBioReviews({ selectedUser }) {
   const userProfileId = selectedUser._id;
@@ -30,55 +31,64 @@ function MentorBioReviews({ selectedUser }) {
       <Typography variant="h6" gutterBottom>
         Reviews ({selectedUser.reviewCount})
       </Typography>
-      {reviews.map((review) => {
-        const fReviewDate = review.createdAt
-          ? fDateToMonthYear(review.createdAt)
-          : "";
-        return (
-          <Card
-            sx={{
-              mt: 1,
-              mb: 1,
-              p: 1,
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <Stack
-              alignItems="flex-start"
-              sx={{ width: "150px" }}
-              flexShrink="0"
-            >
-              <Avatar
-                sx={{ width: "50px", height: "50px", mb: 1 }}
-                src={review.session.from.avatarUrl}
-              />
-              <Typography variant="subtitle2">
-                {review.session.from.name}
-              </Typography>
-              <Typography variant="caption">{fReviewDate}</Typography>
-            </Stack>
-            <Card sx={{ p: 1, bgcolor: "neutral.100", borderRadius: 1 }}>
-              <Typography variant="body2">{review.content}</Typography>
-            </Card>
-          </Card>
-        );
-      })}
-      {totalReviewsByMentor ? (
-        <LoadingButton
-          sx={{ mt: 1 }}
-          variant="outlined"
-          size="small"
-          loading={isLoading}
-          onClick={() => setPage((page) => page + 1)}
-          disabled={Boolean(totalPages === 1)}
-        >
-          Load more
-        </LoadingButton>
+      {isLoading ? (
+        <LoadingScreen sx={{top: 0, left: 0}}/>
       ) : (
-        <Typography variant="h6">No Reviews Yet</Typography>
+        <>
+          {reviews.map((review) => {
+            const fReviewDate = review.createdAt
+              ? fDateToMonthYear(review.createdAt)
+              : "";
+            return (
+              <Card
+                sx={{
+                  mt: 1,
+                  mb: 1,
+                  p: 2,
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+                key={review._id}
+              >
+                <Stack
+                  alignItems="flex-start"
+                  sx={{ width: "150px" }}
+                  flexShrink="0"
+                >
+                  <Avatar
+                    sx={{ width: "50px", height: "50px", mb: 1 }}
+                    src={review.session.from.avatarUrl}
+                  />
+                  <Typography variant="subtitle2">
+                    {review.session.from.name}
+                  </Typography>
+                  <Typography variant="caption">{fReviewDate}</Typography>
+                </Stack>
+                <Card sx={{ p: 1, bgcolor: "neutral.100", borderRadius: 1 }}>
+                  <Typography variant="body2">{review.content}</Typography>
+                </Card>
+              </Card>
+            );
+          })}
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+            {totalReviewsByMentor ? (
+              <LoadingButton
+                sx={{ mt: 1 }}
+                variant="outlined"
+                size="small"
+                loading={isLoading}
+                onClick={() => setPage((page) => page + 1)}
+                disabled={Boolean(totalPages === 1)}
+              >
+                Load more
+              </LoadingButton>
+            ) : (
+              <Typography variant="subtitle1">No Reviews Yet</Typography>
+            )}
+          </Box>
+        </>
       )}
     </Stack>
   );

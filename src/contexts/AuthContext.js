@@ -158,11 +158,12 @@ function AuthProvider({ children }) {
     callback();
   };
 
-  const register = async ({ name, email, password }, callback) => {
+  const register = async ({ name, email, password, isMentor }, callback) => {
     const response = await apiService.post("/users/signup", {
       name,
       email,
       password,
+      isMentor
     });
 
     const { userProfile, accessToken } = response.data;

@@ -1,37 +1,25 @@
 import React, { useState } from "react";
 import {
-  Link,
   Card,
-  Avatar,
   Typography,
-  CardHeader,
   IconButton,
-  List,
-  ListItemButton,
-  ListItemText,
-  Collapse,
   Menu,
   MenuItem,
+  CardContent,
+  Grid,
 } from "@mui/material";
-import { Link as RouterLink } from "react-router-dom";
 import { fDate } from "../../../utils/formatTime";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import { useDispatch } from "react-redux";
-import { remove } from "../../../slices/experienceSlice";
+import { experienceRemove } from "../../../slices/resourceSlice";
 
 function ExpCard({ exp, setCurrentExp, expFormRef }) {
-  const [open, setOpen] = React.useState(true);
   const [anchorEl, setAnchorEl] = useState(null);
   const dispatch = useDispatch();
 
   const expId = exp._id;
   const isMenuOpen = Boolean(anchorEl);
   const menuId = "primary-card-menu";
-
-  const handleClick = () => {
-    setOpen(!open);
-  };
 
   const handleCardOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -56,7 +44,7 @@ function ExpCard({ exp, setCurrentExp, expFormRef }) {
     );
 
     if (res) {
-      dispatch(remove(expId));
+      dispatch(experienceRemove(expId));
     }
     return;
   };
@@ -88,86 +76,51 @@ function ExpCard({ exp, setCurrentExp, expFormRef }) {
 
   return (
     <Card>
-      <CardHeader
-        disableTypography
-        avatar={
-          <Avatar
-            src={exp?.userProfile?.avatarUrl}
-            alt={exp?.userProfile?.name}
-          />
-        }
-        title={
-          <Link
-            variant="subtitle2"
-            color="text.primary"
-            component={RouterLink}
-            sx={{ fontWeight: 600 }}
-            to="/account/profile"
-          >
-            {exp?.userProfile?.name}
-          </Link>
-        }
-        subheader={
-          <Typography
-            variant="caption"
-            sx={{ display: "block", color: "text.secondary" }}
-          >
-            {fDate(exp.createdAt)}
-          </Typography>
-        }
-        action={
-          <IconButton>
-            <MoreVertIcon sx={{ fontSize: 30 }} onClick={handleCardOpen} />
-          </IconButton>
-        }
-      />
+      <CardContent>
+        <Grid container justifyContent="space-between" alignItems="center">
+          <Grid item>
+            <Typography
+              variant="subtitle1"
+              component="div"
+              color="text.primary"
+            >
+              {exp.company}
+            </Typography>
+          </Grid>
+          <Grid item>
+            <IconButton onClick={handleCardOpen}>
+              <MoreVertIcon />
+            </IconButton>
+          </Grid>
+        </Grid>
+        <Typography variant="subtitle2" color="text.secondary">
+          {`Job Title: ${exp.position.title}`}
+        </Typography>
+        <Typography variant="subtitle2" color="text.secondary">
+          {`Description: ${exp.position.description}`}
+        </Typography>
+        <Typography variant="subtitle2" color="text.secondary">
+          {`Start date: ${exp.position.start_date}`}
+        </Typography>
+        <Typography variant="subtitle2" color="text.secondary">
+          {`End date: ${exp.position.end_date}`}
+        </Typography>
+        <Typography variant="subtitle2" color="text.secondary">
+          {`Industry: ${exp.industry}`}
+        </Typography>
+        <Typography variant="subtitle2" color="text.secondary">
+          {`Address: ${exp.location}`}
+        </Typography>
+        <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+          {`Website: ${exp.url}`}
+        </Typography>
+        <Typography variant="caption" color="text.secondary">
+          {exp.updatedAt !== exp.createdAt
+            ? `Edited on ${fDate(exp.updatedAt)}`
+            : `Created on ${fDate(exp.createdAt)}`}
+        </Typography>
+      </CardContent>
       {renderMenu}
-      <List
-        sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
-        component="nav"
-        aria-labelledby="nested-list-subheader"
-      >
-        <ListItemButton>
-          <Typography variant="subtitle1">Company:</Typography>
-          <ListItemText primary={exp.company} />
-        </ListItemButton>
-        <ListItemButton>
-          <Typography variant="subtitle1">Industry:</Typography>
-          <ListItemText primary={exp.industry} />
-        </ListItemButton>
-        <ListItemButton onClick={handleClick}>
-          <Typography variant="subtitle1">Position</Typography>
-          {open ? <ExpandLess /> : <ExpandMore />}
-        </ListItemButton>
-        <Collapse in={open} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            <ListItemButton sx={{ pl: 4 }}>
-              <Typography variant="subtitle2">Title:</Typography>
-              <ListItemText primary={exp.position.title} />
-            </ListItemButton>
-            <ListItemButton sx={{ pl: 4 }}>
-              <Typography variant="subtitle2">Description:</Typography>
-              <ListItemText primary={exp.position.description} />
-            </ListItemButton>
-            <ListItemButton sx={{ pl: 4 }}>
-              <Typography variant="subtitle2">Start date:</Typography>
-              <ListItemText primary={exp.position.start_date} />
-            </ListItemButton>
-            <ListItemButton sx={{ pl: 4 }}>
-              <Typography variant="subtitle2">End date:</Typography>
-              <ListItemText primary={exp.position.end_date} />
-            </ListItemButton>
-          </List>
-        </Collapse>
-        <ListItemButton>
-          <Typography variant="subtitle1">Location:</Typography>
-          <ListItemText primary={exp.location} />
-        </ListItemButton>
-        <ListItemButton>
-          <Typography variant="subtitle1">Url:</Typography>
-          <ListItemText primary={exp.url} />
-        </ListItemButton>
-      </List>
     </Card>
   );
 }

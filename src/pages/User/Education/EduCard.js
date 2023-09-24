@@ -1,25 +1,19 @@
 import React, { useState } from "react";
 import {
-  Link,
   Card,
-  Avatar,
   Typography,
-  CardHeader,
   IconButton,
-  List,
-  ListItemButton,
-  ListItemText,
   Menu,
   MenuItem,
+  CardContent,
+  Grid
 } from "@mui/material";
-import { Link as RouterLink } from "react-router-dom";
 import { fDate } from "../../../utils/formatTime";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useDispatch } from "react-redux";
-import { remove } from "../../../slices/educationSlice";
+import { educationRemove } from "../../../slices/resourceSlice";
 
 function EduCard({ edu, setCurrentEdu, eduFormRef }) {
- 
   const [anchorEl, setAnchorEl] = useState(null);
   const dispatch = useDispatch();
 
@@ -50,7 +44,7 @@ function EduCard({ edu, setCurrentEdu, eduFormRef }) {
     );
 
     if (res) {
-      dispatch(remove(eduId));
+      dispatch(educationRemove(eduId));
     }
     return;
   };
@@ -82,66 +76,38 @@ function EduCard({ edu, setCurrentEdu, eduFormRef }) {
 
   return (
     <Card>
-      <CardHeader
-        disableTypography
-        avatar={
-          <Avatar
-            src={edu?.userProfile?.avatarUrl}
-            alt={edu?.userProfile?.name}
-          />
-        }
-        title={
-          <Link
-            variant="subtitle2"
-            color="text.primary"
-            component={RouterLink}
-            sx={{ fontWeight: 600 }}
-            to="/account/profile"
-          >
-            {edu?.userProfile?.name}
-          </Link>
-        }
-        subheader={
-          <Typography
-            variant="caption"
-            sx={{ display: "block", color: "text.secondary" }}
-          >
-            {fDate(edu.createdAt)}
-          </Typography>
-        }
-        action={
-          <IconButton>
-            <MoreVertIcon sx={{ fontSize: 30 }} onClick={handleCardOpen} />
-          </IconButton>
-        }
-      />
+      <CardContent>
+        <Grid container justifyContent="space-between" alignItems="center">
+          <Grid item>
+            <Typography variant="subtitle1" component="div" color="text.primary">
+              {edu.field}
+            </Typography>
+          </Grid>
+          <Grid item>
+            <IconButton onClick={handleCardOpen}>
+              <MoreVertIcon />
+            </IconButton>
+          </Grid>
+        </Grid>
+        <Typography variant="subtitle2" color="text.secondary">
+          {`Degree: ${edu.degree}`}
+        </Typography>
+        <Typography variant="subtitle2" color="text.secondary">
+          {`Description: ${edu.description}`}
+        </Typography>
+        <Typography variant="subtitle2" color="text.secondary">
+          {`End date: ${edu.end_year}`}
+        </Typography>
+        <Typography variant="subtitle2" color="text.secondary" gutterBottom> 
+          {`Website: ${edu.url}`}
+        </Typography>
+        <Typography variant="caption" color="text.secondary">
+          {edu.updatedAt !== edu.createdAt
+            ? `Edited on ${fDate(edu.updatedAt)}`
+            : `Created on ${fDate(edu.createdAt)}`}
+        </Typography>
+      </CardContent>
       {renderMenu}
-      <List
-        sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
-        component="nav"
-        aria-labelledby="nested-list-subheader"
-      >
-        <ListItemButton>
-          <Typography variant="subtitle1">Field:</Typography>
-          <ListItemText primary={edu.field} />
-        </ListItemButton>
-        <ListItemButton>
-          <Typography variant="subtitle1">Description:</Typography>
-          <ListItemText primary={edu.description} />
-        </ListItemButton>
-        <ListItemButton>
-          <Typography variant="subtitle1">Degree:</Typography>
-          <ListItemText primary={edu.degree} />
-        </ListItemButton>
-        <ListItemButton>
-          <Typography variant="subtitle1">End date:</Typography>
-          <ListItemText primary={edu.end_date} />
-        </ListItemButton>
-        <ListItemButton>
-          <Typography variant="subtitle1">Url:</Typography>
-          <ListItemText primary={edu.url} />
-        </ListItemButton>
-      </List>
     </Card>
   );
 }

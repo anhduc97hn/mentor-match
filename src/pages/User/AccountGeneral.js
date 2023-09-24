@@ -11,7 +11,7 @@ import {
 import FTextField from "../../components/form/FTextField";
 import { LoadingButton } from "@mui/lab";
 import * as yup from "yup";
-import { fData } from "../../utils/numberFormat";
+import { fSize } from "../../utils/numberFormat";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import FUploadAvatar from "../../components/form/FUploadAvatar";
@@ -30,31 +30,30 @@ const UserGeneralSchema = yup.object().shape({
 const SOCIAL_LINKS = [
   {
     value: "facebookLink",
-    icon: <FacebookIcon sx={{ fontSize: 30 }} />,
+    icon: <FacebookIcon sx={{ fontSize: 30 }} className="social-icon" />,
   },
   {
     value: "instagramLink",
-    icon: <InstagramIcon sx={{ fontSize: 30 }} />,
+    icon: <InstagramIcon sx={{ fontSize: 30 }} className="social-icon" />,
   },
   {
     value: "linkedinLink",
-    icon: <LinkedInIcon sx={{ fontSize: 30 }} />,
+    icon: <LinkedInIcon sx={{ fontSize: 30 }} className="social-icon"  />,
   },
   {
     value: "twitterLink",
-    icon: <TwitterIcon sx={{ fontSize: 30 }} />,
+    icon: <TwitterIcon sx={{ fontSize: 30 }} className="social-icon" />,
   },
 ];
 
 function AccountGeneral() {
-  
-  const {userProfile} = useAuth();
+  const { userProfile } = useAuth();
   const isLoading = useSelector((state) => state.userProfile.isLoading);
   const dispatch = useDispatch();
 
   const defaultValues = {
     name: userProfile?.name || "",
-    email: userProfile?.email || "",
+    email: userProfile?.userId?.email || "",
     currentCompany: userProfile?.currentCompany || "",
     currentPosition: userProfile?.currentPosition || "",
     avatarUrl: userProfile?.avatarUrl || "",
@@ -93,7 +92,7 @@ function AccountGeneral() {
   );
 
   const onSubmit = (data) => {
-    console.log("user general info", data)
+    console.log("user general info", data);
     dispatch(updateUserProfile(data));
   };
 
@@ -119,7 +118,7 @@ function AccountGeneral() {
                   }}
                 >
                   Allowed *.jpeg, *.jpg, *.png, *.gif
-                  <br /> max size of {fData(3145728)}
+                  <br /> max size of {fSize(3145728)}
                 </Typography>
               }
             />
@@ -142,9 +141,9 @@ function AccountGeneral() {
               <FTextField name="email" label="Email" disabled />
               <FTextField name="currentPosition" label="Current Position" />
               <FTextField name="currentCompany" label="Current Company" />
-              <FTextField name="city" label="City" />
             </Box>
             <Stack spacing={3} alignItems="flex-end" sx={{ mt: 3 }}>
+              <FTextField name="city" label="City" />
               <FTextField name="aboutMe" multiline rows={4} label="About Me" />
               {SOCIAL_LINKS.map((link) => (
                 <FTextField

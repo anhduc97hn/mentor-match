@@ -2,9 +2,9 @@ import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import userProfileReducer from "../slices/userProfileSlice";
 import sessionReducer from "../slices/sessionSlice";
 import reviewReducer from "../slices/reviewSlice"
-import { educationReducer } from "../slices/educationSlice";
-import { experienceReducer } from "../slices/experienceSlice";
-import { certificationReducer } from "../slices/certificationSlice";
+import { educationReducer } from "../slices/resourceSlice";
+import { experienceReducer } from "../slices/resourceSlice";
+import { certificationReducer } from "../slices/resourceSlice";
 
 const rootReducer = combineReducers({
   userProfile: userProfileReducer,

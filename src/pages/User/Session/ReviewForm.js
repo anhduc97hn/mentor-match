@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography';
 import FormProvider from "../../../components/form/FormProvider";
 import FTextField from "../../../components/form/FTextField"
 import { useForm } from 'react-hook-form';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import * as Yup from "yup";
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert } from '@mui/material';
@@ -31,23 +31,21 @@ const style = {
 };
 
 const ReviewSchema = Yup.object().shape({
-    reviewRating: Yup.number().required("Rating is required"),
-    reviewContent: Yup.string().required("Review is required")
+    rating: Yup.number().required("Please rate your experience"),
+    content: Yup.string().required("Please write your review, we will take it seriously!")
   });
   
   const defaultValues = {
-    reviewRating: null,
-    reviewContent: ""
+    rating: null,
+    content: ""
   };
 
-export default function ReviewForm({children}) {
+export default function ReviewForm({children, sessionId}) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const params = useParams();
-  const { sessionId } = params; 
 
   const methods = useForm({
     resolver: yupResolver(ReviewSchema),
@@ -61,9 +59,12 @@ export default function ReviewForm({children}) {
   } = methods;
 
   const onSubmit = async (data) => {
-    console.log("data", data)
-    dispatch(createReview({data, sessionId})).then(() => reset())
-    navigate("/account/sessions")
+    const { content, rating } = data;
+    await dispatch(
+      createReview({ content, rating, sessionId, prevStatus: "completed"})
+    ).then(() => {
+      reset();
+    });
   };
 
   return (
@@ -92,8 +93,8 @@ export default function ReviewForm({children}) {
             <Typography id="transition-modal-title" variant="h6" sx={{mt: 1, mb: 1}}>
              Please rate your overall experience
             </Typography>
-            <FRating name="reviewRating" sx={{mb: 3}} />
-            <FTextField name="reviewContent" label="Please share your feedback" multiline rows={4}/>
+            <FRating name="rating" sx={{mb: 3}} />
+            <FTextField name="content" label="Please share your feedback" multiline rows={4}/>
             <LoadingButton
             sx={{mt: 3}}
             type="submit"
