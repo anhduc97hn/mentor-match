@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import apiService from "../app/apiService";
+import { getSessions, updateSessionStatus } from "./sessionSlice"
 
 const initialState = {
   isLoading: false,
@@ -88,7 +89,7 @@ export const getSingleReview = (reviewId) => async (dispatch) => {
 };
 
 export const createReview =
-  ({ sessionId, content, rating }) =>
+  ({ sessionId, content, rating, prevStatus }) =>
   async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -97,6 +98,8 @@ export const createReview =
         rating,
       });
       dispatch(slice.actions.createReviewSuccess(response.data));
+      dispatch(getSessions({ prevStatus }));
+      toast.success("create review successfully!");
     } catch (error) {
       dispatch(slice.actions.hasError(error.message));
       toast.error(error.message);

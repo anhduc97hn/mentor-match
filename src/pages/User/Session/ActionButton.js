@@ -1,16 +1,14 @@
 import { Button, Stack } from "@mui/material";
 import React from "react";
 import { useDispatch } from "react-redux";
-import {
-  acceptRequest,
-  cancelRequest,
-  declineRequest,
-  updateSessionStatus,
-} from "../../../slices/sessionSlice";
+import { updateSessionStatus } from "../../../slices/sessionSlice";
+import { useNavigate } from "react-router-dom";
 
-function ActionButton({ currentUserProfileId, session, sx }) {
+function ActionButton({ currentUserProfileId, session, sx, prevStatus }) {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { status, to, sessionId } = session;
+  const { status, to } = session;
+  const sessionId = session._id;
 
   const btnCancelRequest = (
     <Button
@@ -18,7 +16,12 @@ function ActionButton({ currentUserProfileId, session, sx }) {
       size="small"
       variant="contained"
       color="error"
-      onClick={() => dispatch(updateSessionStatus({sessionId, status: "cancelled"}))}
+      onClick={async () => {
+        await dispatch(
+          updateSessionStatus({ sessionId, status: "cancelled", prevStatus })
+        );
+        navigate("/account/session");
+      }}
     >
       Cancel Request
     </Button>
@@ -31,26 +34,38 @@ function ActionButton({ currentUserProfileId, session, sx }) {
         size="small"
         variant="contained"
         color="success"
-        onClick={() => dispatch(updateSessionStatus({sessionId, status: "accepted"}))}
+        onClick={async () => {
+          await dispatch(
+            updateSessionStatus({ sessionId, status: "accepted", prevStatus })
+          );
+          navigate("/account/session");
+        }}
       >
         Accept
       </Button>
       <Button
+        sx={{ fontSize: "0.6rem", ...sx }}
         size="small"
         variant="outlined"
         color="error"
-        onClick={() => dispatch(updateSessionStatus({sessionId, status: "declined"}))}
+        onClick={async () => {
+          await dispatch(
+            updateSessionStatus({ sessionId, status: "declined", prevStatus })
+          );
+          navigate("/account/session");
+        }}
       >
         Decline
       </Button>
     </Stack>
   );
 
-  if (status === "pending" && to === currentUserProfileId) return btnGroupReact;
+  if (status === "pending" && to._id === currentUserProfileId)
+    return btnGroupReact;
   else if (
     status !== "completed" &&
     status !== "reviewed" &&
-    status !== "cancelled"
+    status !== "cancelled" 
   )
     return btnCancelRequest;
 }

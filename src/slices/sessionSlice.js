@@ -33,7 +33,7 @@ const slice = createSlice({
         (session) => (state.sessionsById[session._id] = session)
       );
       state.currentPageSessions = sessions.map((session) => session._id);
-      state.totalSessions = count;
+      state.total = count;
       state.totalPages = totalPages;
     },
     sendSessionRequestSuccess(state, action) {
@@ -135,13 +135,13 @@ export const getRequestsReceived =
   };
 
 export const sendSessionRequest =
-  ({ targetUserProfileId, sessionInfo }) =>
+  ({ userProfileId, data }) =>
   async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await apiService.post(
-        `/sessions/requests/${targetUserProfileId}`,
-        sessionInfo
+        `/sessions/requests/${userProfileId}`,
+        data
       );
       dispatch(slice.actions.sendSessionRequestSuccess(response.data));
       toast.success("Request sent");
@@ -160,6 +160,7 @@ export const declineRequest = (sessionId) => async (dispatch) => {
     dispatch(
       slice.actions.declineRequestSuccess(response.data)
     );
+    dispatch(getSessions());
     toast.success("Request declined");
   } catch (error) {
     dispatch(slice.actions.hasError(error.message));
@@ -176,6 +177,7 @@ export const acceptRequest = (sessionId) => async (dispatch) => {
     dispatch(
       slice.actions.acceptRequestSuccess(response.data)
     );
+    dispatch(getSessions());
     toast.success("Request accepted");
   } catch (error) {
     dispatch(slice.actions.hasError(error.message));
@@ -192,6 +194,7 @@ export const cancelRequest = (sessionId) => async (dispatch) => {
     dispatch(
       slice.actions.cancelRequestSuccess(response.data)
     );
+    dispatch(getSessions());
     toast.success("Request cancelled");
   } catch (error) {
     dispatch(slice.actions.hasError(error.message));
@@ -207,25 +210,29 @@ export const completeSession = (sessionId) => async (dispatch) => {
     dispatch(
       slice.actions.completeSessionSuccess(response.data)
     );
-    toast.success("Session completed");
+    dispatch(getSessions());
   } catch (error) {
     dispatch(slice.actions.hasError(error.message));
     toast.error(error.message);
   }
 };
 
-export const updateSessionStatus = ({sessionId, status}) => async (dispatch) => {
-  dispatch(slice.actions.startLoading());
-  try {
-    const response = await apiService.put(`/sessions/requests/${sessionId}`, status
-    );
-    dispatch(
-      slice.actions.updateSessionStatusSuccess(response.data)
-    );
-    toast.success("Session updated");
-  } catch (error) {
-    dispatch(slice.actions.hasError(error.message));
-    toast.error(error.message);
-  }
-};
+export const updateSessionStatus =
+  ({ sessionId, status, prevStatus }) =>
+  async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await apiService.put(`/sessions/${sessionId}`, {
+        status,
+      });
+      dispatch(slice.actions.updateSessionStatusSuccess(response.data));
+      if (prevStatus) {
+        dispatch(getSessions({ status: prevStatus }));
+      }
+      toast.success("Session updated");
+    } catch (error) {
+      dispatch(slice.actions.hasError(error.message));
+      toast.error(error.message);
+    }
+  };
 

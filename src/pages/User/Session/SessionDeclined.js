@@ -3,25 +3,20 @@ import { useDispatch, useSelector } from "react-redux";
 import { getSessions } from "../../../slices/sessionSlice";
 import SessionList from "./SessionList";
 
-function SessionRequests({ userProfile }) {
+function SessionDeclined({ userProfile }) {
+
   const [page, setPage] = useState(1);
-  const {
-    currentPageSessions,
-    sessionsById,
-    isLoading,
-    error,
-    total,
-    totalPages,
-  } = useSelector((state) => state.session);
+  const { currentPageSessions, sessionsById, isLoading, error, total, totalPages } = useSelector(
+    (state) => state.session
+  );
   const sessions = currentPageSessions.map(
     (sessionId) => sessionsById[sessionId]
   );
   const dispatch = useDispatch();
 
   useEffect(() => {
-   dispatch(getSessions({ status: "pending", page }));
+    dispatch(getSessions({ status: "declined", page }));
   }, [dispatch, page]);
-
   return (
     <SessionList
       isLoading={isLoading}
@@ -31,9 +26,8 @@ function SessionRequests({ userProfile }) {
       total={total}
       totalPages={totalPages}
       setPage={setPage}
-      prevStatus="pending"
     />
   );
 }
 
-export default SessionRequests;
+export default SessionDeclined;

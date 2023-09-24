@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import { create, update } from "../../../slices/certificationSlice";
+import { certificationCreate, certificationUpdate } from "../../../slices/resourceSlice";
 import { LoadingButton } from "@mui/lab";
 
 const CertiSchema = Yup.object().shape({
@@ -56,7 +56,7 @@ function CertiForm({ currentCerti, setCurrentCerti, certiFormRef }) {
         key={prefix + fieldName}
         name={`${prefix}${fieldName}`}
         fullWidth
-        placeholder={fieldName.charAt(0).toUpperCase() + fieldName.slice(1)}
+        label={fieldName.charAt(0).toUpperCase() + fieldName.slice(1)}
         sx={{
           "& fieldset": {
             borderWidth: `1px !important`,
@@ -69,10 +69,14 @@ function CertiForm({ currentCerti, setCurrentCerti, certiFormRef }) {
 
   const onSubmit = (data) => {
     if (updatedCertiId) {
-      dispatch(update({ updatedCertiId, data })).then(() => reset());
-      setCurrentCerti(null);
+      dispatch(certificationUpdate({ itemId: updatedCertiId, data })).then(
+        () => {
+          setCurrentCerti(null);
+          reset();
+        }
+      );
     } else {
-      dispatch(create(data)).then(() => reset());
+      dispatch(certificationCreate(data)).then(() => reset());
     }
   };
 

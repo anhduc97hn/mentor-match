@@ -1,12 +1,12 @@
-import React, { useEffect } from "react";
-import SessionCard from "./SessionCard";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import LoadingScreen from "../../../components/LoadingScreen";
 import { getSessions } from "../../../slices/sessionSlice";
-import { Alert } from "@mui/material";
+import SessionList from "./SessionList";
 
 function SessionReviewed({ userProfile }) {
-  const { currentPageSessions, sessionsById, isLoading, error } = useSelector(
+
+  const [page, setPage] = useState(1);
+  const { currentPageSessions, sessionsById, isLoading, error, total, totalPages } = useSelector(
     (state) => state.session
   );
   const sessions = currentPageSessions.map(
@@ -15,24 +15,18 @@ function SessionReviewed({ userProfile }) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getSessions({ status: "reviewed" }));
-  }, [dispatch]);
+    dispatch(getSessions({ status: "reviewed", page }));
+  }, [dispatch, page]);
   return (
-    <>
-      {isLoading ? (
-        <LoadingScreen />
-      ) : error ? (
-        <Alert severity="error">{error}</Alert>
-      ) : (
-        sessions.map((session) => (
-          <SessionCard
-            session={session}
-            key={session._id}
-            currentUserProfileId={userProfile._id}
-          />
-        ))
-      )}
-    </>
+    <SessionList
+    isLoading={isLoading}
+    error={error}
+    sessions={sessions}
+    userProfile={userProfile}
+    total={total}
+    totalPages={totalPages}
+    setPage={setPage}
+  />
   );
 }
 

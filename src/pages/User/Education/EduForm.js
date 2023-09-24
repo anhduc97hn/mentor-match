@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import { create, update } from "../../../slices/educationSlice";
+import { educationCreate, educationUpdate } from "../../../slices/resourceSlice";
 import { LoadingButton } from "@mui/lab";
 
 const EduSchema = Yup.object().shape({
@@ -50,6 +50,7 @@ function EduForm({
   useEffect(() => {
     if (updatedEduId) {
       const updatedEdu = dataById[updatedEduId];
+      console.log("updatedEdu", updatedEdu)
       setValue("degree", updatedEdu.degree);
       setValue("field", updatedEdu.field);
       setValue("description", updatedEdu.description);
@@ -58,13 +59,13 @@ function EduForm({
     }
   }, [updatedEduId, dataById, setValue]);
 
-  const renderDynamicFields = (fields, prefix = "") => {
+  const renderDynamicFields = (fields) => {
     return Object.keys(fields).map((fieldName) => (
       <FTextField
-        key={prefix + fieldName}
-        name={`${prefix}${fieldName}`}
+        key={fieldName}
+        name={fieldName}
         fullWidth
-        placeholder={fieldName.charAt(0).toUpperCase() + fieldName.slice(1)}
+        label={fieldName.charAt(0).toUpperCase() + fieldName.slice(1)}
         sx={{
           "& fieldset": {
             borderWidth: `1px !important`,
@@ -76,11 +77,14 @@ function EduForm({
   };
 
   const onSubmit = (data) => {
+    
     if (updatedEduId) {
-      dispatch(update({ updatedEduId, data })).then(() => reset());
-      setCurrentEdu(null);
+      dispatch(educationUpdate({ itemId: updatedEduId, data })).then(() => {
+        setCurrentEdu(null);
+        reset();
+      });
     } else {
-      dispatch(create(data)).then(() => reset());
+      dispatch(educationCreate(data)).then(() => reset());
     }
   };
 

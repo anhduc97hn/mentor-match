@@ -24,7 +24,8 @@ import FDateTimePicker from "../../components/form/FPickDateTime";
 const RequestSchema = Yup.object().shape({
   topic: Yup.string().required("Please enter a topic for this session"),
   problem: Yup.string().required("Please write a brief for your topic"),
-  startDateTime: Yup.date().required("Please select your preferred timeslot")});
+  startDateTime: Yup.date().required("Please select your preferred timeslot")
+});
 
 const defaultValues = {
   topic: "",
@@ -39,8 +40,9 @@ function SessionPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const params = useParams();
-  const { userProfileId } = params; 
-  const { selectedUser, isLoading, error } = useSelector(
+  const userProfileId = params.mentorId; 
+  
+  const { selectedUser, isLoading } = useSelector(
     (state) => state.userProfile
   );
 
@@ -51,16 +53,21 @@ function SessionPage() {
 
   const {
     handleSubmit,
+    reset,
+    setError,
     formState: { errors, isSubmitting },
     setValue
   } = methods;
 
   // Function to handle startDateTime change
   const handleStartDateTimeChange = (value) => {
+    
     const startDate = new Date(value);
     startDate.setHours(startDate.getHours() + 1);
-    setEndDateTime(startDate.toISOString());
-    setValue("endDateTime", startDate.toISOString());
+    
+    setEndDateTime(startDate);
+    setValue("startDateTime", value); 
+    setValue("endDateTime", startDate);
   };
 
   useEffect(() => {
@@ -68,9 +75,15 @@ function SessionPage() {
   }, [dispatch, userProfileId])
   
   const onSubmit = async (data) => {
-    console.log("session info", data)
-    dispatch(sendSessionRequest({userProfileId, data}))
-    navigate("/account/session")
+    
+    try {
+      await dispatch(sendSessionRequest({userProfileId, data}))
+      navigate("/account/session")
+    }
+    catch (error) {
+      reset();
+      setError("responseError", error.errors ? error.errors : error);
+    }
   };
 
   return (
@@ -84,22 +97,15 @@ function SessionPage() {
             Session details
           </Typography>
           {isLoading ? (
-              <LoadingScreen />
-            ) : (
-              <>
-                {error ? (
-                  <Alert severity="error">{error}</Alert>
-                ) : (
-                  <Stack direction="row" spacing={2} sx={{ mt: 3 }}>
-                  <Avatar sx={{ width: "50px", height: "50px" }} src={selectedUser.avatarUrl} />
+              <LoadingScreen sx={{top: 0, left: 0}}/>
+            ) : ( <Stack direction="row" spacing={2} sx={{ mt: 3 }}>
+                  <Avatar sx={{ width: "50px", height: "50px" }} src={selectedUser?.avatarUrl} />
                   <Stack>
                     <Typography variant="body1">Mentor</Typography>
-                    <Typography variant="subtitle1">{selectedUser.name}</Typography>
+                    <Typography variant="subtitle1">{selectedUser?.name}</Typography>
                   </Stack>
                 </Stack>
                 )}
-              </>
-            )}
           <Divider sx={{ mt: 3, mb: 3 }} />
           <Typography variant="subtitle1" gutterBottom>
             Schedule Session
@@ -108,14 +114,14 @@ function SessionPage() {
             Sessions should be scheduled at least 24 hours in advance.
           </Typography>
           <FDateTimePicker
-            sx={{ mt: 2, mb: 1 }}
+            sx={{ mt: 2, display: "block" }}
             label="Select Start Date/Time "
             name="startDateTime"
-            disablePast
+            disablePast={true}
             onChange={handleStartDateTimeChange} 
           />
            <FDateTimePicker
-            sx={{ mt: 2, mb: 1 }}
+            sx={{ mt: 2}}
             label="Select End Date/Time"
             name="endDateTime"
             value={endDateTime} 

@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import { create, update } from "../../../slices/experienceSlice";
+import { experienceCreate, experienceUpdate } from "../../../slices/resourceSlice";
 import { LoadingButton } from "@mui/lab";
 
 const ExpSchema = Yup.object().shape({
@@ -15,8 +15,8 @@ const ExpSchema = Yup.object().shape({
   position: Yup.object().shape({
     title: Yup.string().required("Position title is required"),
     description: Yup.string().required("Position description is required"),
-    start_date: Yup.date().required("Start date is required"),
-    end_date: Yup.date().required("End date is required"),
+    start_date: Yup.string().required("Start date is required"),
+    end_date: Yup.string().required("End date is required"),
   }),
 });
 
@@ -24,13 +24,13 @@ const defaultValues = {
   company: "",
   industry: "",
   location: "",
+  url: "",
   position: {
     title: "",
     description: "",
     start_date: "",
     end_date: "",
-  },
-  url: "",
+  }
 };
 
 function ExpForm({ currentExp, setCurrentExp, expFormRef }) {
@@ -68,28 +68,38 @@ function ExpForm({ currentExp, setCurrentExp, expFormRef }) {
   }, [updatedExpId, dataById, setValue]);
 
   const renderDynamicFields = (fields, prefix = "") => {
-    return Object.keys(fields).map((fieldName) => (
-      <FTextField
-        key={prefix + fieldName}
-        name={`${prefix}${fieldName}`}
-        fullWidth
-        placeholder={fieldName.charAt(0).toUpperCase() + fieldName.slice(1)}
-        sx={{
-          "& fieldset": {
-            borderWidth: `1px !important`,
-            borderColor: alpha("#919EAB", 0.32),
-          },
-        }}
-      />
-    ));
+    return Object.keys(fields).map((fieldName) => {
+      if (fieldName === "position") return null
+      
+      const label = prefix + fieldName !== "position"
+        ? fieldName.charAt(0).toUpperCase() + fieldName.slice(1)
+        : "";
+
+      return (
+        <FTextField
+          key={prefix + fieldName}
+          name={`${prefix}${fieldName}`}
+          fullWidth
+          label={label}
+          sx={{
+            "& fieldset": {
+              borderWidth: `1px !important`,
+              borderColor: alpha("#919EAB", 0.32),
+            },
+          }}
+        />
+      );
+    });
   };
 
   const onSubmit = (data) => {
     if (updatedExpId) {
-      dispatch(update({ updatedExpId, data })).then(() => reset());
-      setCurrentExp(null);
+      dispatch(experienceUpdate({ itemId: updatedExpId, data })).then(() => {
+        setCurrentExp(null);
+        reset();
+      });
     } else {
-      dispatch(create(data)).then(() => reset());
+      dispatch(experienceCreate(data)).then(() => reset());
     }
   };
 

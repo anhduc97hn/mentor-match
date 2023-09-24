@@ -20,27 +20,37 @@ function MainHeader() {
   const [anchorEl, setAnchorEl] = useState(null);
   
   const auth = useAuth();
-  const { user } = auth; 
+  const { userProfile } = auth; 
 
   const navigate = useNavigate();
   const isMenuOpen = Boolean(anchorEl);
   const menuId = "account-menu";
 
-  const handleProfileMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
+  const handleProfileMenuToggle = (event) => {
+    if (anchorEl) {
+      setAnchorEl(null);
+    } else {
+      setAnchorEl(event.currentTarget);
+    }
   };
 
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
 
-  const handleLogout = () => {
-    auth.logout(() => {
-      navigate("/");
-    });
+  const handleLogout = async () => {
+    try {
+      handleMenuClose();
+      auth.logout(() => {
+        navigate("/");
+      });
+    }
+   catch (error) {
+    console.error(error)
+   }
   };
 
-  const handleClickLogin = () => {
+  const handleClickLogin = async () => {
     navigate("/login");
   };
 
@@ -62,10 +72,10 @@ function MainHeader() {
     >
       <Box sx={{ my: 1.5, px: 2.5 }}>
         <Typography variant="subtitle1" noWrap>
-          {user?.username}
+          {userProfile?.name}
         </Typography>
         <Typography variant="subtitle1" sx={{ color: "text.secondary" }} noWrap>
-          {user?.email}
+          {userProfile?.userId?.email}
         </Typography>
       </Box>
 
@@ -98,8 +108,8 @@ function MainHeader() {
   );
 
   return (
-    // <Box sx={{ mb: 0.5, zIndex: "tooltip", top: 0, left: 0}}>
-      <AppBar position="sticky" color="inherit" sx={{mb: 0.5, zIndex: "tooltip", top: 0, left: 0}}>
+    // <Box sx={{mb: 0.5, zIndex: "tooltip", top: 0, left: 0}}>
+       <AppBar position="sticky" color="inherit" sx={{mb: 0.5, zIndex: "tooltip", top: 0, left: 0}} >
         <Toolbar>
           <IconButton
             size="large"
@@ -125,15 +135,15 @@ function MainHeader() {
             Browse Mentors
           </Button>
 
-          {user ? (
+          {userProfile ? (
             <Box>
               <Avatar
-                onClick={handleProfileMenuOpen}
-                src={user?.avatarUrl}
-                alt={user?.name}
+                onClick={handleProfileMenuToggle}
+                src={userProfile?.avatarUrl}
+                alt={userProfile?.name}
                 sx={{ width: 32, height: 32 }}
               />
-                {renderMenu}
+                
             </Box>
           ) : (
             <Button
@@ -145,8 +155,10 @@ function MainHeader() {
             </Button>
           )}
         </Toolbar>
+        {renderMenu}
       </AppBar>
     // </Box>
+      
   );
 }
 

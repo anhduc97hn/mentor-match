@@ -5,6 +5,7 @@ import SessionCanceled from "./Session/SessionCanceled";
 import SessionRequests from "./Session/SessionRequests";
 import SessionReviewed from "./Session/SessionReviewed";
 import SessionUpcoming from "./Session/SessionUpcoming";
+import SessionDeclined from "./Session/SessionDeclined";
 
 const title = "My Session";
 const ACCOUNT_TABS = [
@@ -28,14 +29,27 @@ const ACCOUNT_TABS = [
     value: "cancelled",
     component: (props) => <SessionCanceled {...props} />,
   },
+  {
+    value: "declined",
+    component: (props) => <SessionDeclined {...props} />,
+  },
 ];
 
-function UserSession({ userProfile }) {
+function UserSession({ userProfile, isMentor }) {
+
+  const filteredTabs = isMentor
+    ? ACCOUNT_TABS.filter((tab) => tab.value !== "attention")
+    : ACCOUNT_TABS;
+
+  const tabsWithProps = filteredTabs.map((tab) => ({
+    ...tab,
+    component: <tab.component userProfile={userProfile}/>,
+  }));
+
   return (
     <DashboardTabs
-      tabs={ACCOUNT_TABS}
+      tabs={tabsWithProps}
       title={title}
-      userProfile={userProfile}
       defaultTab="requests"
     />
   );

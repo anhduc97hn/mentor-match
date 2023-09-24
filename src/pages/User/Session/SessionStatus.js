@@ -54,7 +54,7 @@ function SessionStatus({ currentUserProfileId, status, from, to, sx }) {
   }
 
   if (status === "pending") {
-    if (from === currentUserProfileId) {
+    if (from._id === currentUserProfileId) {
       return (
         <Chip
           sx={{ ...sx }}
@@ -63,7 +63,7 @@ function SessionStatus({ currentUserProfileId, status, from, to, sx }) {
           color="warning"
         />
       );
-    } else if (to === currentUserProfileId) {
+    } else if (to._id === currentUserProfileId) {
       return (
         <Chip
           sx={{ ...sx }}
@@ -86,7 +86,6 @@ function SessionStatus({ currentUserProfileId, status, from, to, sx }) {
     );
   }
 
-  return null;
 }
 
 export default SessionStatus;

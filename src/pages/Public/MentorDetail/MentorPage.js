@@ -180,7 +180,7 @@ function MentorPage() {
               <Button
                 variant="contained"
                 component={RouterLink}
-                to={"/mentors/{userProfileId}/session"}
+                to={`/mentors/${userProfileId}/session`}
               >
                 Request a Call
               </Button>

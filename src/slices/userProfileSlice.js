@@ -38,7 +38,7 @@ const slice = createSlice({
       const { userProfiles, count, totalPages } = action.payload;
       userProfiles.forEach((user) => (state.userProfilesById[user._id] = user));
       state.currentPageUsers = userProfiles.map((user) => user._id);
-      state.totalUsers = count;
+      state.total = count;
       state.totalPages = totalPages;
     },
     getUserProfileFeaturedSuccess(state, action) {
