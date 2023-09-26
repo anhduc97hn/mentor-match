@@ -1,26 +1,209 @@
-General user flow
+Description
 
-- Users to log in as customer in order to schedule a session with desired mentor 
-- Next, customer can add details of a request before sending it to mentor.
-- Next, customer will see the status of the request in his/her dashboard. 
-- After the request is approved by mentor, customer will see the updated status of the request and the request will be saved to customer and mentor google calendar and provided with a google meet link. 
-- After the session is finished, customer can leave a review on mentor's profile. 
+Mentor match is an app that aims to take user's professional development to a next level where he/she can get instant access and support from a network of qualified professionals in his/her own interests, anywhere, anytime.
 
-Features
+User Stories
 
-- [ ] All users can see the list of mentors and their reviews before joining 
-- [ ] Customers can send a request to desired mentors 
-- [ ] Customers can cancel a sent request 
-- [ ] Mentors can approve or cancel the request
-- [ ] Bookings can be directly connected/saved to user's google calendar & meet
-- [ ] Persistent login 
-- [ ] Responsive design
+Guests/visitors 
+As a guest, I can browse the list of mentors and search for suitable ones based on certain filters and sortings. 
+As a guest, I can check out mentors’ profiles and reviews 
+
+Registered customer
+As a customer, I can send/cancel a session request to my desired mentors
+As a customer, I can leave a review after the session is finished
+As a customer, I can receive a google meet link for my upcoming session requests 
+As a customer, I can view and manage all of my session requests in my dashboard
+As a customer, I can update my profile settings 
+
+Registered mentor
+As a mentor, I can create and update my profile settings 
+As a mentor, I can accept/decline/cancel a session request from customer
+As a mentor, I can receive a google meet link for my upcoming session requests
+As a mentor, I can view and manage all of my session requests in my dashboard 
+As a mentor, I cannot book a session with myself 
+
+Features and Specifications
+
+User Authentication
+Mentors and customers can create accounts using their emails
+Registered users can log in and stay signed in for a while
+Registered users can log out
+
+Browsing mentors
+All users can search for mentors based on name, city, location, company and sort results by review rating, number of sessions and joining date
+All users can view mentors’ profiles and their reviews
+
+Profile management
+Users can update their account settings, including basic information and their profile avatar 
+Mentors can create and update their  profiles more comprehensively, including other fields such as education, certifications, experiences which will then be displayed on the website. 
+
+Session management 
+Customer can send/cancel a session request to any mentor
+Mentor can accept/decline/cancel a request from customer
+Both users will have dedicated session dashboards to view status and manage all session requests 
+Google meet link will be provided to users once the mentor accepts the session request.
+Customer is prompted to leave a review on a session after it’s finished.  
 
 Advanced features
 
-- [ ] Admin dashboard 
-- [ ] Mentor dasboard 
-- [ ] Auth: to update password & forget password 
-- [ ] Customer: to add card information and conduct payment 
-- [ ] Mentor: to have an application form on the web app & update their available timeslots 
-- [ ] to be updated 
+Auth: forget password
+Auth: sign up/sign in by google credentials
+Session link: google meet to be saved directly to user's google calendar and/or be confirmed with an email sent to user's email address
+Responsive UI
+
+Deploy link: 
+
+Schema & ERD
+
+User
+UserProfile
+Certification
+Education
+Experience 
+Session
+Review
+ERD: https://drive.google.com/file/d/1A-53mhZX2PiFHzTxw1GbMiehrddgO2Bt/view?usp=sharing
+
+API Endpoints
+
+Auth APIs
+/**
+ * @route POST /auth/login
+ * @description Log in with email and password
+ * @access Public
+ */
+
+User APIs
+/**
+ * @route POST /users/signup
+ * @description Register new user
+ * @access Public
+ */
+
+userProfile APIs
+/**
+ * @route GET /userProfiles?page=1&limit=10
+ * @description Get userProfiles with pagination
+ * @access Public
+ */
+/**
+ * @route GET /userProfiles/featured?page=1&limit=9
+ * @description Get featured mentors on homepage
+ * @access Public
+ */
+/**
+ * @route GET /userProfiles/me
+ * @description Get current user info
+ * @access Login required
+ */
+/**
+ * @route GET /userProfiles/:userProfileId
+ * @description Get a user profile
+ * @access Public
+ */
+/**
+ * @route PUT /userProfiles/me
+ * @description Update user profile
+ * @access Login required
+ */
+/**
+ * @route GET /userProfiles/:userProfileId/reviews
+ * @description Get all reviews of a mentor
+ * @access Public
+ */
+
+Certification APIs
+/**
+ * @route POST /certifications
+ * @description Create a new certification
+ * @access Login required
+ */
+/**
+ * @route GET /certifications?page=1&limit=10
+ * @description Get all certi of the current user with pagination
+ * @access Login required
+ */
+/**
+ * @route PUT /certifications/:certiId
+ * @description Update a certi
+ * @access Login required
+ */
+/**
+ * @route DELETE /certifications/:certiId
+ * @description Delete a certi
+ * @access Login required
+ */
+
+Education APIs
+/**
+ * @route POST /educations
+ * @description Create a new education form
+ * @access Login required
+ */
+/**
+ * @route GET /educations?page=1&limit=10
+ * @description Get all education of the current user with pagination
+ * @access Login required
+ */
+/**
+ * @route PUT /educations/:educationId
+ * @description Update an education
+ * @access Login required
+ */
+/**
+ * @route DELETE /educations/:educationId
+ * @description Delete an education
+ * @access Login required
+ */
+
+Experience APIs
+/**
+ * @route POST /experiences
+ * @description Create a new experience
+ * @access Login required
+ */
+/**
+ * @route GET /experiences?page=1&limit=10
+ * @description Get all experience of the current user with pagination
+ * @access Login required
+ */
+/**
+ * @route PUT /experiences/:expId
+ * @description Update an experience
+ * @access Login required
+ */
+/**
+ * @route DELETE /experiences/:expId
+ * @description Delete an experience
+ * @access Login required
+ */
+
+Session APIs
+/**
+ * @route POST /sessions/:sessionId/reviews
+ * @description Create a new review on a session
+ * @access Login required
+ */
+/**
+ * @route POST /sessions/requests/:userId
+ * @description Send a session request
+ * @access Login required
+ */
+/**
+ * @route GET /sessions
+ * @description Get the list of sessions based on the status 
+ * @access Login required
+ */
+/**
+ * @route PUT /sessions/:sessionId
+ * @description Update status of a session (accept/decline/cancel/complete/pending/reviewed)
+ * @access Login required
+ */
+
+Review APIs
+/**
+ * @route GET /reviews/:reviewId
+ * @description Get details of a review
+ * @access Login required
+ */
+

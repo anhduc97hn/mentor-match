@@ -32,8 +32,12 @@ import LoadingScreen from "../../../components/LoadingScreen";
 import NotFoundPage from "../NotFoundPage";
 import { fData } from "../../../utils/numberFormat";
 import { fDateToMonthYear } from "../../../utils/formatTime";
+import useAuth from "../../../hooks/useAuth";
 
 function MentorPage() {
+
+  const { userProfile } = useAuth();
+  const currentUserProfileId = userProfile?._id; 
   const params = useParams();
   const userProfileId = params.mentorId;
   const dispatch = useDispatch();
@@ -181,6 +185,7 @@ function MentorPage() {
                 variant="contained"
                 component={RouterLink}
                 to={`/mentors/${userProfileId}/session`}
+                disabled={Boolean(currentUserProfileId === userProfileId)}
               >
                 Request a Call
               </Button>

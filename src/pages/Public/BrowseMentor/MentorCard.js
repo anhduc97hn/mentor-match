@@ -9,20 +9,23 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
-import StarIcon from '@mui/icons-material/Star';
-import { Link as RouterLink } from "react-router-dom"
+import StarIcon from "@mui/icons-material/Star";
+import { Link as RouterLink } from "react-router-dom";
 import MentorChip from "./MentorChip";
 import { fData } from "../../../utils/numberFormat";
+import useAuth from "../../../hooks/useAuth";
 
 function MentorCard({ mentor }) {
+  const { userProfile } = useAuth();
+  const currentUserProfileId = userProfile?._id;
 
   const [currentTab, setCurrentTab] = useState("Certifications");
-  const mentorId = mentor._id; 
+  const mentorId = mentor._id;
 
   const certifications = mentor.certifications || null;
   const certificationNames = certifications?.map((certi) => certi.name);
-  
-  const experiences = mentor.experiences || null; 
+
+  const experiences = mentor.experiences || null;
   const industryNames = experiences?.map((exp) => exp.industry);
 
   const education = mentor.education || null;
@@ -43,7 +46,9 @@ function MentorCard({ mentor }) {
     },
   ];
 
-  const fRating = mentor.reviewAverageRating ? fData(mentor.reviewAverageRating) : "";
+  const fRating = mentor.reviewAverageRating
+    ? fData(mentor.reviewAverageRating)
+    : "";
 
   return (
     <Card sx={{ mt: 2, padding: 2 }}>
@@ -57,7 +62,7 @@ function MentorCard({ mentor }) {
           <Typography
             variant="subtitle2"
             color="primary"
-            component={ RouterLink }
+            component={RouterLink}
             sx={{ fontWeight: 600, textDecoration: "none" }}
             to={`/mentors/${mentorId}`}
           >
@@ -77,13 +82,13 @@ function MentorCard({ mentor }) {
             <Typography variant="h5">{fRating}</Typography>
           </Stack>
           <Typography variant="subtitle2">
-            {mentor.reviewCount} reviews /  {mentor.sessionCount} sessions
+            {mentor.reviewCount} reviews / {mentor.sessionCount} sessions
           </Typography>
         </Stack>
       </Stack>
 
       <Typography variant="subtitle2" sx={{ mt: 1, mb: 1 }}>
-       {mentor.aboutMe}
+        {mentor.aboutMe}
       </Typography>
 
       <Stack direction="row" justifyContent="space-between" alignItems="center">
@@ -117,9 +122,29 @@ function MentorCard({ mentor }) {
             );
           })}
         </Box>
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 1, flexShrink: "0" }}>
-          <Button variant="contained" component={RouterLink} to={`/mentors/${mentorId}/session`}>Request a Call</Button>
-          <Button variant="outlined" component={RouterLink} to={`/mentors/${mentorId}`}>View Profile</Button>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 1,
+            flexShrink: "0",
+          }}
+        >
+          <Button
+            variant="contained"
+            component={RouterLink}
+            to={`/mentors/${mentorId}/session`}
+            disabled={Boolean(currentUserProfileId === mentorId)}
+          >
+            Request a Call
+          </Button>
+          <Button
+            variant="outlined"
+            component={RouterLink}
+            to={`/mentors/${mentorId}`}
+          >
+            View Profile
+          </Button>
         </Box>
       </Stack>
     </Card>
