@@ -8,7 +8,6 @@ import Typography from '@mui/material/Typography';
 import FormProvider from "../../../components/form/FormProvider";
 import FTextField from "../../../components/form/FTextField"
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
 import * as Yup from "yup";
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert } from '@mui/material';
@@ -44,7 +43,6 @@ export default function ReviewForm({children, sessionId}) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const methods = useForm({

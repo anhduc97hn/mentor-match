@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import apiService from "../app/apiService";
-import { getSessions, updateSessionStatus } from "./sessionSlice"
+import { getSessions } from "./sessionSlice"
 
 const initialState = {
   isLoading: false,
