@@ -237,11 +237,19 @@ Mentor match is an app that aims to take user's professional development to a ne
 ```
 ```
 /**
+ * @route GET /sessions/google/redirect
+ * @description Google OAuth2 
+ * @access Google auth
+ */
+```
+```
+/**
  * @route PUT /sessions/:sessionId
  * @description Update status of a session (accept/decline/cancel/complete/pending/reviewed)
  * @access Login required
  */
 ```
+
 ## Review APIs
 ```
 /**
