@@ -14,7 +14,6 @@ function SessionCard({ currentUserProfileId, session, prevStatus }) {
     <ActionButton
       currentUserProfileId={currentUserProfileId}
       session={session}
-      sx={{ fontSize: "0.7rem" }}
       prevStatus={prevStatus}
     />
   );
@@ -24,7 +23,7 @@ function SessionCard({ currentUserProfileId, session, prevStatus }) {
       status={status}
       from={from}
       to={to}
-      sx={{ fontSize: "0.7rem" }}
+      sx={{ fontSize: "0.6rem" }}
     />
   );
   // Function to calculate the days until the session
