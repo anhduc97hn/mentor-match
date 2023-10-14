@@ -9,6 +9,7 @@ const initialState = {
   updatedProfile: null,
   selectedUser: null,
   currentPageUsers: [],
+  currentHomePageUsers: [],
   userProfilesById: {},
 };
 
@@ -47,7 +48,7 @@ const slice = createSlice({
 
       const { userProfiles } = action.payload;
       userProfiles.forEach((userProfile) => (state.userProfilesById[userProfile._id] = userProfile));
-      state.currentPageUsers = userProfiles.map((userProfile) => userProfile._id);
+      state.currentHomePageUsers = userProfiles.map((userProfile) => userProfile._id);
     },
     getSingleUserProfileSuccess(state, action) {
       state.isLoading = false;

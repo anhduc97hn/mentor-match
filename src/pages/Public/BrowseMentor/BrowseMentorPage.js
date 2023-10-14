@@ -63,7 +63,7 @@ function BrowseMentorPage() {
   };
 
   useEffect(() => {
-    dispatch(getUserProfile({ filter: updates, page }));
+      dispatch(getUserProfile({ filter: updates, page }));
   }, [dispatch, updates, page]);
 
   // Calculate filter options inline
