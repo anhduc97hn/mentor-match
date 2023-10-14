@@ -6,27 +6,21 @@ import FeaturedMentorList from "./FeaturedMentorList";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserProfileFeatured } from "../../../slices/userProfileSlice";
 import LoadingScreen from "../../../components/LoadingScreen";
-import { useMediaQuery } from "@mui/material";
-
-
 
 function HomePage() {
 
-  const breakpoints = {
-    desktop: useMediaQuery((theme) => theme.breakpoints.up("lg")),
-    tablet: useMediaQuery((theme) => theme.breakpoints.between("md", "lg")),
-    smartphone: useMediaQuery((theme) => theme.breakpoints.down("md")),
-  };
-  
-  const { currentPageUsers, userProfilesById, isLoading } = useSelector(
+  const { currentHomePageUsers, userProfilesById, isLoading } = useSelector(
     (state) => state.userProfile
   );
-  const userProfiles = currentPageUsers.map((userProfileId) => userProfilesById[userProfileId]);
+  const userProfiles = currentHomePageUsers.map((userProfileId) => userProfilesById[userProfileId]);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getUserProfileFeatured({ page: 1, limit: 9 }));
-  }, [dispatch]);
+     // Check if data already exists in Redux store
+     if (!currentHomePageUsers.length) {
+      dispatch(getUserProfileFeatured({}));
+     }
+  }, [dispatch, currentHomePageUsers]);
 
   return (
         <>

@@ -78,7 +78,7 @@ function MentorPage() {
     : "";
 
   useEffect(() => {
-    dispatch(getSingleUserProfile(userProfileId));
+      dispatch(getSingleUserProfile(userProfileId));
   }, [dispatch, userProfileId]);
 
   return (
