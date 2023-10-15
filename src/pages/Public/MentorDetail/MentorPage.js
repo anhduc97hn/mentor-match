@@ -112,20 +112,26 @@ function MentorPage() {
               sx={{ width: "100px", height: "100px" }}
               src={selectedUser.avatarUrl}
             />
-            <Typography variant="h5">{selectedUser.name}</Typography>
-            <Typography variant="body1">
+            <Typography variant="h5" sx={{ textAlign: "center" }}>
+              {selectedUser.name}
+            </Typography>
+            <Typography variant="body1" sx={{ textAlign: "center" }}>
               {selectedUser.currentPosition} at {selectedUser.currentCompany}{" "}
             </Typography>
-            <Stack direction="row" alignItems="center" spacing={10}>
-              <Stack direction="row" spacing={1}>
+            <Stack
+              direction={{ xs: "column", sm: "column", md: "row" }}
+              alignItems="center"
+              spacing={{ xs: 2, sm: 2, md: 10 }}
+            >
+              <Stack direction="row" spacing={1} alignItems="center">
                 <LocationOnIcon color="primary" />
                 <Typography variant="subtitle2">{selectedUser.city}</Typography>
               </Stack>
-              <Stack direction="row" spacing={1}>
+              <Stack direction="row" spacing={1} alignItems="center">
                 <LanguageIcon color="primary" />
                 <Typography variant="subtitle2">Vietnamese, English</Typography>
               </Stack>
-              <Typography variant="subtitle2">
+              <Typography variant="subtitle2" alignItems="center">
                 Joined {formattedCreatedAt}
               </Typography>
             </Stack>
@@ -138,16 +144,17 @@ function MentorPage() {
               }}
             >
               <Stack
-                direction="row"
+                direction={{ xs: "column", sm: "column", md: "row" }}
                 alignItems="center"
                 justifyContent="space-between"
                 sx={{ p: 2 }}
+                spacing={{xs: 2, sm: 2, md: 0}}
               >
                 <Box>
-                  <Typography variant="h6" color="success.main">
+                  <Typography variant="h6" color="success.main" sx={{textAlign: "center"}}>
                     Free
                   </Typography>
-                  <Typography variant="body2">Price per hour</Typography>
+                  <Typography variant="body2" sx={{textAlign: "center"}}>Price per hour</Typography>
                 </Box>
                 <Box
                   sx={{
@@ -161,7 +168,7 @@ function MentorPage() {
                   </Typography>
                   <Typography variant="body2">Cancel anytime</Typography>
                 </Box>
-                <Stack>
+                <Stack alignItems="center">
                   <Stack direction="row" justifyContent="flex-end">
                     <StarIcon sx={{ color: "primary.main", mr: 0.5 }} />
                     <Typography variant="h5">
@@ -176,10 +183,11 @@ function MentorPage() {
               </Stack>
             </Card>
             <Stack
-              direction="row"
+              direction={{ xs: "column", sm: "column", md: "row" }}
               justifyContent="space-between"
               alignItems="center"
               sx={{ width: "100%" }}
+              spacing={{xs: 2, sm: 2, md: 0}}
             >
               <Button
                 variant="contained"

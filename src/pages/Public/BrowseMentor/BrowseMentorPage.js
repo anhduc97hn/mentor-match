@@ -119,7 +119,7 @@ function BrowseMentorPage() {
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
           <Box
             className="search-bar"
-            sx={{ height: "200px", borderRadius: 1.5 }}
+            sx={{ height: "200px", borderRadius: 1.5, width: "100%" }}
           >
             <FTextField
               name="searchQuery"
@@ -145,6 +145,7 @@ function BrowseMentorPage() {
                 justifyContent: "space-around",
                 p: 1,
                 mt: 2,
+                width: "100%"
               }}
               direction="row"
               spacing={2}
@@ -156,7 +157,7 @@ function BrowseMentorPage() {
                   label={item.label}
                   options={item.options}
                   sx={{
-                    width: 300,
+                    width: "25%",
                     border: "1px solid #9DA4AE",
                     borderRadius: 1,
                   }}
@@ -166,7 +167,7 @@ function BrowseMentorPage() {
                 name="sortBy"
                 label="Sort By"
                 size="medium"
-                sx={{ width: "auto"}}
+                sx={{width: {sm: "auto", md: "15%", xs: "auto"}}}
               >
                 {[ 
                   { value: "reviewDesc", label: "Most Rating" },

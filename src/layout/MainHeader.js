@@ -18,9 +18,9 @@ import useAuth from "../hooks/useAuth";
 
 function MainHeader() {
   const [anchorEl, setAnchorEl] = useState(null);
-  
+
   const auth = useAuth();
-  const { userProfile } = auth; 
+  const { userProfile } = auth;
 
   const navigate = useNavigate();
   const isMenuOpen = Boolean(anchorEl);
@@ -44,10 +44,9 @@ function MainHeader() {
       auth.logout(() => {
         navigate("/");
       });
+    } catch (error) {
+      console.error(error);
     }
-   catch (error) {
-    console.error(error)
-   }
   };
 
   const handleClickLogin = async () => {
@@ -108,57 +107,62 @@ function MainHeader() {
   );
 
   return (
-    // <Box sx={{mb: 0.5, zIndex: "tooltip", top: 0, left: 0}}>
-       <AppBar position="sticky" color="inherit" sx={{mb: 0.5, zIndex: "tooltip", top: 0, left: 0}} >
-        <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            sx={{ mr: 2 }}
-          >
-            <Logo />
-          </IconButton>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ display: { xs: "none", sm: "block" } }}
-          >
-            MENTOR MATCH
-          </Typography>
+    <AppBar
+      position="sticky"
+      color="inherit"
+      sx={{ mb: 0.5, zIndex: "tooltip", top: 0, left: 0 }}
+    >
+      <Toolbar>
+        <IconButton
+          size="large"
+          edge="start"
+          color="inherit"
+          aria-label="open drawer"
+          sx={{ mr: 2 }}
+        >
+          <Logo />
+        </IconButton>
+        <Typography
+          variant="h6"
+          noWrap
+          component="div"
+          sx={{ display: { xs: "none", sm: "block" } }}
+        >
+          MENTOR MATCH
+        </Typography>
 
-          <Box sx={{ flexGrow: 1 }} />
+        <Box sx={{ flexGrow: 1 }} />
 
-          <Button component={RouterLink} to="/mentors" variant="contained" sx={{ mr: 2 }}>
-            Browse Mentors
+        <Button
+          component={RouterLink}
+          to="/mentors"
+          variant="contained"
+          sx={{ mr: 2 }}
+        >
+          Browse Mentors
+        </Button>
+
+        {userProfile ? (
+          <Box>
+            <Avatar
+              onClick={handleProfileMenuToggle}
+              src={userProfile?.avatarUrl}
+              alt={userProfile?.name}
+              sx={{ width: 32, height: 32 }}
+            />
+          </Box>
+        ) : (
+          <Button
+            onClick={handleClickLogin}
+            variant="contained"
+            startIcon={<LoginIcon />}
+          >
+            Login
           </Button>
-
-          {userProfile ? (
-            <Box>
-              <Avatar
-                onClick={handleProfileMenuToggle}
-                src={userProfile?.avatarUrl}
-                alt={userProfile?.name}
-                sx={{ width: 32, height: 32 }}
-              />
-                
-            </Box>
-          ) : (
-            <Button
-              onClick={handleClickLogin}
-              variant="contained"
-              startIcon={<LoginIcon />}
-            >
-              Login
-            </Button>
-          )}
-        </Toolbar>
-        {renderMenu}
-      </AppBar>
-    // </Box>
-      
+        )}
+      </Toolbar>
+      {renderMenu}
+    </AppBar>
   );
 }
 

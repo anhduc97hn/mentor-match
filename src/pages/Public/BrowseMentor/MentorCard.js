@@ -91,7 +91,12 @@ function MentorCard({ mentor }) {
         {mentor.aboutMe}
       </Typography>
 
-      <Stack direction="row" justifyContent="space-between" alignItems="center">
+      <Stack
+        direction={{ xs: "column", sm:"row", md: "row" }}
+        justifyContent="space-between"
+        alignItems={{xs: "flex-start", sm:"center", md: "center"}}
+        spacing={{xs: 2, sm: 0, md: 0}}
+      >
         <Box>
           <Tabs
             value={currentTab}
@@ -128,6 +133,7 @@ function MentorCard({ mentor }) {
             flexDirection: "column",
             gap: 1,
             flexShrink: "0",
+            width: {xs: "100%", sm: "auto", md: 'auto'}
           }}
         >
           <Button

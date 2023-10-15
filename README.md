@@ -49,7 +49,7 @@ Mentor match is an app that aims to take user's professional development to a ne
 - [ ] Auth: forget password
 - [ ] Auth: sign up/sign in by google credentials
 - [x] Session link: google meet to be saved directly to user's google calendar and/or be confirmed with an email sent to user's email address
-- [ ] Responsive UI
+- [x] Responsive UI
 
 **Deploy link**: https://mentor-match-site.netlify.app/ 
 

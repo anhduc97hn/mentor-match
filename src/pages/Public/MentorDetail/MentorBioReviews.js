@@ -46,9 +46,10 @@ function MentorBioReviews({ selectedUser }) {
                   mb: 1,
                   p: 2,
                   display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
+                  flexDirection: { xs: "column", sm: "column", md: "row" },
+                  alignItems: {xs: "left", sm: "left", md: "center"},
                   justifyContent: "space-between",
+                  gap: {xs: 2, sm: 2, md: 0}
                 }}
                 key={review._id}
               >
