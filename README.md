@@ -46,8 +46,8 @@ Mentor match is an app that aims to take user's professional development to a ne
 
 # Advanced features
 
-- [ ] Auth: forget password
-- [ ] Auth: sign up/sign in by google credentials
+- [x] Auth: forget password
+- [x] Auth: sign up/sign in by google credentials
 - [x] Session link: google meet to be saved directly to user's google calendar and/or be confirmed with an email sent to user's email address
 - [x] Responsive UI
 
@@ -75,6 +75,31 @@ Mentor match is an app that aims to take user's professional development to a ne
  * @access Public
  */
 ```
+
+```
+/**
+ * @route POST /auth/googlelogin
+ * @description Login with OAuth2
+ * @access Public
+ */
+```
+
+```
+/**
+ * @route PUT /auth/forgotpassword
+ * @description forget password 
+ * @access Public
+ */
+```
+
+```
+/**
+ * @route PUT /auth/resetpassword
+ * @description reset password  
+ * @access resetToken access
+ */
+```
+
 ## User APIs
 ```
 /**

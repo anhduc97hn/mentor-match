@@ -243,6 +243,28 @@ export function customComponents(theme) {
         },
       },
     },
+    MuiFormControlLabel: {
+      styleOverrides: {
+        label: {
+          fontSize: 14,
+          fontWeight: 500,
+          [`&.${inputLabelClasses.filled}`]: {
+            transform: "translate(12px, 18px) scale(1)",
+          },
+          [`&.${inputLabelClasses.shrink}`]: {
+            [`&.${inputLabelClasses.standard}`]: {
+              transform: "translate(0, -1.5px) scale(0.85)",
+            },
+            [`&.${inputLabelClasses.filled}`]: {
+              transform: "translate(12px, 6px) scale(0.85)",
+            },
+            [`&.${inputLabelClasses.outlined}`]: {
+              transform: "translate(14px, -9px) scale(0.85)",
+            },
+          },
+        },
+      },
+    },
     MuiTab: {
       styleOverrides: {
         root: {

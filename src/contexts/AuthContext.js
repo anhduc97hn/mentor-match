@@ -2,6 +2,7 @@ import { createContext, useReducer, useEffect } from "react";
 import apiService from "../app/apiService";
 import { useSelector } from "react-redux";
 import { isValidToken } from "../utils/jwt";
+import { toast } from "react-toastify";
 
 const initialState = {
   isInitialized: false,
@@ -44,7 +45,6 @@ const reducer = (state, action) => {
         userProfile: null,
       };
     case UPDATE_PROFILE:
-      console.log("updated profile", action.payload)
       const {
         name,
         avatarUrl,
@@ -158,6 +158,47 @@ function AuthProvider({ children }) {
     callback();
   };
 
+  const loginWithGoogle = async (idToken, callback) => {
+    try {
+      const response = await apiService.post("/auth/googlelogin", idToken);
+      const { userProfile, accessToken } = response.data;
+      setSession(accessToken);
+      dispatch({
+        type: LOGIN_SUCCESS,
+        payload: { userProfile },
+      });
+      callback();
+    }
+    catch(e) {
+      toast.error(e.errors.message)
+    }
+  };
+
+  const forgotPassword = async (email, callback) => {
+    try {
+      const response = await apiService.put("/auth/forgotpassword", { email });
+      toast.success(response.message);
+      callback();
+    }
+    catch (e) {
+      toast.error(e.errors.message)
+    }
+  };
+
+  const resetPassword = async ({ newPassword, resetToken }, callback) => {
+    try {
+      const response = await apiService.put("/auth/resetpassword", {
+        newPassword,
+        resetToken,
+      });
+      toast.success(response.message);
+      callback();
+    }
+    catch (e) {
+      toast.error(e.errors.message)
+    }
+  };
+
   const register = async ({ name, email, password, isMentor }, callback) => {
     const response = await apiService.post("/users/signup", {
       name,
@@ -172,9 +213,10 @@ function AuthProvider({ children }) {
       type: REGISTER_SUCCESS,
       payload: { userProfile },
     });
-
     callback();
   };
+
+
 
   const logout = async (callback) => {
     setSession(null);
@@ -187,8 +229,11 @@ function AuthProvider({ children }) {
       value={{
         ...state,
         login,
+        loginWithGoogle,
         register,
         logout,
+        forgotPassword,
+        resetPassword
       }}
     >
       {children}

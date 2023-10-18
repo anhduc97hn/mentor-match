@@ -31,6 +31,8 @@ import UserSession from "../pages/User/UserSession";
 
 import AuthRequire from "./AuthRequire";
 import useAuth from "../hooks/useAuth";
+import ForgotPasswordPage from "../pages/Auth/ForgotPasswordPage";
+import ResetPasswordPage from "../pages/Auth/ResetPasswordPage";
 
 function Router() {
 
@@ -75,6 +77,8 @@ function Router() {
       <Route element={<BlankLayout />}>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/forgetpassword" element={<ForgotPasswordPage />} />
+        <Route path="/resetpassword/:resetToken" element={<ResetPasswordPage />} />
       </Route>
 
       {/* not found route */}

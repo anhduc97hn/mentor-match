@@ -10,7 +10,7 @@ function FCheckbox({ name, ...other }) {
         <Controller
           name={name}
           control={control}
-          render={({ field }) => <Checkbox {...field} checked={field.value} />}
+          render={({ field }) => <Checkbox {...field} checked={field.value} size="small" />}
         />
       }
       {...other}
