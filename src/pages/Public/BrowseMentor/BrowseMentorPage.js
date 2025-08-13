@@ -12,6 +12,7 @@ import {
   Pagination,
   Stack,
   Typography,
+  Button
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { useForm } from "react-hook-form";
@@ -116,130 +117,109 @@ function BrowseMentorPage() {
         }}
         maxWidth="false"
       >
-        <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-          <Box
-            className="search-bar"
-            sx={{ height: "200px", borderRadius: 1.5, width: "100%" }}
-          >
-            <FTextField
-              name="searchQuery"
-              size="medium"
-              variant="standard"
-              sx={{ p: 1, mt: 5 }}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start" sx={{ height: "200px" }}>
-                    <SearchIcon
-                      sx={{ width: "30px", height: "30px" }}
-                      color="primary"
-                    />
-                  </InputAdornment>
-                ),
-                placeholder: "Search by mentor name",
-              }}
-            />
-
-            <Stack
-              sx={{
-                alignItems: "center",
-                justifyContent: "space-around",
-                p: 1,
-                mt: 2,
-                width: "100%"
-              }}
-              direction="row"
-              spacing={2}
-            >
-              {renderMenu.map((item) => (
-                <FAutoComplete
-                  key={item.name}
-                  name={item.name}
-                  label={item.label}
-                  options={item.options}
-                  sx={{
-                    width: "25%",
-                    border: "1px solid #9DA4AE",
-                    borderRadius: 1,
+        {isLoading ? (
+          <LoadingScreen sx={{ top: 0, left: 0 }} />
+        ) : (
+          <>
+            <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+              <Box className="search-bar" sx={{ height: "200px", borderRadius: 1.5, width: "100%" }}>
+                <FTextField
+                  name="searchQuery"
+                  size="medium"
+                  variant="standard"
+                  sx={{ p: 1, mt: 5 }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start" sx={{ height: "200px" }}>
+                        <SearchIcon sx={{ width: "30px", height: "30px" }} color="primary" />
+                      </InputAdornment>
+                    ),
+                    placeholder: "Search by mentor name",
                   }}
                 />
-              ))}
-              <FSelect
-                name="sortBy"
-                label="Sort By"
-                size="medium"
-                sx={{width: {sm: "auto", md: "15%", xs: "auto"}}}
+
+                <Stack
+                  sx={{
+                    alignItems: "center",
+                    justifyContent: "space-around",
+                    p: 1,
+                    mt: 2,
+                    width: "100%",
+                  }}
+                  direction="row"
+                  spacing={2}
+                >
+                  {renderMenu.map((item) => (
+                    <FAutoComplete
+                      key={item.name}
+                      name={item.name}
+                      label={item.label}
+                      options={item.options}
+                      sx={{
+                        width: "25%",
+                        border: "1px solid #9DA4AE",
+                        borderRadius: 1,
+                      }}
+                    />
+                  ))}
+                  <FSelect name="sortBy" label="Sort By" size="medium" sx={{ width: { sm: "auto", md: "15%", xs: "auto" } }}>
+                    {[
+                      { value: "reviewDesc", label: "Most Rating" },
+                      { value: "sessionDesc", label: "Most Sessions" },
+                      { value: "newest", label: "Most Recent" },
+                    ].map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </FSelect>
+                </Stack>
+              </Box>
+              <Stack
+                flexDirection="row"
+                sx={{
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  mt: 2,
+                  mb: 2,
+                }}
               >
-                {[ 
-                  { value: "reviewDesc", label: "Most Rating" },
-                  { value: "sessionDesc", label: "Most Sessions" },
-                  { value: "newest", label: "Most Recent" },
-                ].map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </FSelect>
-            </Stack>
-          </Box>
-          <Stack
-            flexDirection="row"
-            sx={{
-              alignItems: "center",
-              justifyContent: "space-between",
-              mt: 2,
-              mb: 2,
-            }}
-          >
-            <Typography variant="subtitle1">{`${total} mentors found`}</Typography>
-            <Stack
-              flexDirection="row"
+                <Typography variant="subtitle1">{`${total} mentors found`}</Typography>
+                <Stack
+                  flexDirection="row"
+                  sx={{
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Button
+                    sx={{ mr: 1 }}
+                    variant="contained"
+                    size="small"
+                    // loading={isLoading}
+                    type="submit"
+                  >
+                    Search
+                  </Button>
+                  <Button variant="outlined" size="small" onClick={handleReset}>
+                    Reset
+                  </Button>
+                </Stack>
+              </Stack>
+            </FormProvider>
+            <Box sx={{ position: "relative", height: 1 }}>{error ? <Alert severity="error">{error}</Alert> : <MentorList mentors={mentors} />}</Box>
+            <Box
               sx={{
+                mt: 2,
+                display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
               }}
             >
-              <LoadingButton
-                sx={{ mr: 1 }}
-                variant="contained"
-                size="small"
-                loading={isLoading}
-                type="submit"
-              >
-                Search
-              </LoadingButton>
-              <LoadingButton
-                variant="outlined"
-                size="small"
-                onClick={handleReset}
-              >
-                Reset
-              </LoadingButton>
-            </Stack>
-          </Stack>
-        </FormProvider>
-        <Box sx={{ position: "relative", height: 1 }}>
-          {isLoading ? (
-            <LoadingScreen sx={{ top: 0, left: 0 }} />
-          ) : (
-            <>
-              {error ? (
-                <Alert severity="error">{error}</Alert>
-              ) : (
-                <MentorList mentors={mentors} />
-              )}
-            </>
-          )}
-        </Box>
-        <Box
-          sx={{
-            mt: 2,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Pagination count={totalPages} page={page} onChange={handleChange} />
-        </Box>
+              <Pagination count={totalPages} page={page} onChange={handleChange} />
+            </Box>
+          </>
+        )}
       </Container>
     </section>
   );
