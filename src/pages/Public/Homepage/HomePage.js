@@ -176,6 +176,7 @@ function HomePage() {
               mt: 5,
               mb: 5,
               flexGrow: 1,
+              position: "relative",
             }}
           >
             <Typography variant={isTabletOrSmaller ? 'h6' : 'h5'} sx={{ mb: 3,  textAlign: { xs: "center", md: "left" } }}>
