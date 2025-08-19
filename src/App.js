@@ -6,7 +6,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import { DatePicker } from "./contexts/DatePicker";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
-const clientId = process.env.REACT_APP_CLIENT_ID;
+const clientId = import.meta.env.VITE_CLIENT_ID;
 
 function App() {
   return (

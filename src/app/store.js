@@ -17,6 +17,7 @@ const rootReducer = combineReducers({
 
 const store = configureStore({
   reducer: rootReducer,
+//  devTools: process.env.NODE_ENV !== "production" && process.env.REACT_APP_REDUX_DEVTOOLS === "true",
 });
 
 export default store;
